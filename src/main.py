@@ -5,17 +5,18 @@ from typing import Callable, Any, Type
 import pydantic
 from pydantic import BaseModel
 
+from src.event_elements.event_element import AllValuesExtraction, SingleValueExtraction, EventElement
 from src.exceptions.cannot_extract_single_key import CannotExtractSingleKey
 from src.exceptions.cannot_use_model import CannotUseModel
 from src.exceptions.missing_http_element import MissingHTTPElement
 from src.exceptions.missing_type_hint import MissingTypeHint
-from src.http_elements.event_element import AllValuesExtraction, SingleValueExtraction, EventElement
 
 
 class AWSEventExtractor:
     """
     AWS Event extractor and validator.
     """
+
     def __init__(self) -> None:
         self.event = {}
         self.context = {}
@@ -35,6 +36,7 @@ class AWSEventExtractor:
             FunctionParameters = pydantic.create_model("FunctionParameters", **self.__model_structure)
             model = FunctionParameters(**self.__raw_parameters)
             return endpoint_function(**(model.dict()))
+
         return wrapper
 
     def __extract_raw_argument_from_event(self, parameter: inspect.Parameter) -> tuple[Any, type]:

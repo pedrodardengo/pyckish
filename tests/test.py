@@ -1,11 +1,11 @@
 from pydantic import BaseModel, Field
 
-from src.http_elements.body.body import Body
-from src.http_elements.headers.header import Header
-from src.http_elements.headers.headers import Headers
-from src.http_elements.path_parameters.path_parameter import PathParameter
-from src.http_elements.path_parameters.path_parameters import PathParameters
-from src.http_elements.query_parameters.query_parameter import QueryParameter
+from src.event_elements.http_elements.body import Body
+from src.event_elements.http_elements.header import Header
+from src.event_elements.http_elements.headers import Headers
+from src.event_elements.http_elements.path_parameter import PathParameter
+from src.event_elements.http_elements.path_parameters import PathParameters
+from src.event_elements.http_elements.query_parameter import QueryParameter
 from src.main import AWSEventExtractor
 
 

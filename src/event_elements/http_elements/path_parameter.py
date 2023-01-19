@@ -1,7 +1,7 @@
 from typing import Optional, Any
 
+from src.event_elements.event_element import EventElement
 from src.exceptions.validation_error import ValidationError
-from src.http_elements.event_element import EventElement
 
 
 class PathParameter(EventElement):

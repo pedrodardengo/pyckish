@@ -1,6 +1,6 @@
 from typing import Any
 
-from src.http_elements.event_element import EventElement
+from src.event_elements.event_element import EventElement
 
 
 class QueryParameters(EventElement):
