@@ -1,9 +1,9 @@
 from typing import Optional, Any
 
-from src.http_elements.http_element import HTTPElement
+from src.http_elements.event_element import EventElement
 
 
-class Header(HTTPElement):
+class Header(EventElement):
     def __init__(self, alias: Optional[str] = None, default: Optional[Any] = None) -> None:
         super().__init__(alias=alias, default=default)
 

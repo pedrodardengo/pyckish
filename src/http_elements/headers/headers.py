@@ -1,9 +1,9 @@
 from typing import Any
 
-from src.http_elements.http_element import HTTPElement
+from src.http_elements.event_element import EventElement
 
 
-class Headers(HTTPElement):
+class Headers(EventElement):
     def __init__(self) -> None:
         super().__init__()
 

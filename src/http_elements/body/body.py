@@ -1,9 +1,9 @@
 from typing import Optional, Any
 
-from src.http_elements.http_element import HTTPElement
+from src.http_elements.event_element import EventElement
 
 
-class Body(HTTPElement):
+class Body(EventElement):
     def __init__(self, default: Optional[str] = None) -> None:
         super().__init__(default=default)
 

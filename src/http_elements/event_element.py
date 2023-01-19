@@ -16,7 +16,7 @@ class AllValuesExtraction(Protocol):
         ...
 
 
-class HTTPElement(ABC):
+class EventElement(ABC):
 
     def __init__(self, alias: Optional[str] = None, default: Optional[Any] = None) -> None:
         self.alias = alias

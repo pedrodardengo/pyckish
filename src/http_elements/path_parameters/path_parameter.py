@@ -1,10 +1,10 @@
 from typing import Optional, Any
 
 from src.exceptions.validation_error import ValidationError
-from src.http_elements.http_element import HTTPElement
+from src.http_elements.event_element import EventElement
 
 
-class PathParameter(HTTPElement):
+class PathParameter(EventElement):
     def __init__(self, alias: Optional[str] = None) -> None:
         super().__init__(alias=alias)
 

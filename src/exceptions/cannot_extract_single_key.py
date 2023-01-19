@@ -1,10 +1,10 @@
-from src.http_elements.http_element import HTTPElement
+from src.http_elements.event_element import EventElement
 
 
 class CannotExtractSingleKey(Exception):
 
-    def __init__(self, parameter_name: str, http_element: HTTPElement) -> None:
+    def __init__(self, parameter_name: str, event_element: EventElement) -> None:
         super().__init__(
                 f'On parameter "{parameter_name}" cannot '
-                f'extract {type(http_element)} as a Model'
+                f'extract {type(event_element)} as a Model'
         )
