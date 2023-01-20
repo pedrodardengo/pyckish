@@ -11,8 +11,7 @@ class HTTPBody(EventElement):
     def __init__(self, default: Optional[str] = None) -> None:
         super().__init__(default=default)
 
-    @staticmethod
-    def extract(event: dict, context: dict) -> Any:
+    def extract(self, event: dict, context: dict) -> Any:
         try:
             argument = event['body']
         except KeyError:

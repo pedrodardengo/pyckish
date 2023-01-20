@@ -11,8 +11,7 @@ class HTTPQueryParameters(EventElement):
     def __init__(self) -> None:
         super().__init__()
 
-    @staticmethod
-    def extract(event: dict, context: dict) -> Any:
+    def extract(self, event: dict, context: dict) -> Any:
         try:
             argument = event['queryStringParameters']
         except KeyError:
