@@ -1,10 +1,10 @@
 # Pyckish
-### AWS Lambda Event extractor/parser/validator" 
+### AWS Lambda extractor/parser/validator" 
 Pyckish is an "extract, parse and validate" solution to allow ease of use when dealing with AWS Lambdas. It aims
 to make using Lambdas to handle HTTP requests an alternative that works similarly to other frameworks for back-end
 applications, like FastAPI.
 
-Currently, it can be used to extract HTTP data that comes in the event dictionary. It extracts from the dictionary,
+Currently, it can be used to extract HTTP data that comes in the event/context dictionary. It extracts from the dictionary,
 parses it and validates it. It relies heavily on Pydantic, and will make your life simpler if you only like to deal with validated and
 correctly typed data.
 
@@ -21,12 +21,14 @@ def lambda_handler(event: dict, context: dict) -> float:
 ```
 
 #### Do this:
+
 ```python
 import pyckish
 from pyckish.http_elements import Body, Header, PathParameter
 from my_models import Item
 
-@pyckish.AWSEventExtractor()
+
+@pyckish.Lambda()
 def lambda_handler(
         auth: str = Header(alias='authorization_token'),
         store: str = PathParameter(default='my_store'),

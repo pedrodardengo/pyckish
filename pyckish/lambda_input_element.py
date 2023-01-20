@@ -2,11 +2,10 @@ import inspect
 from abc import ABC, abstractmethod
 from typing import Optional, Any
 
-
 EMPTY = inspect.Parameter.empty
 
 
-class EventElement(ABC):
+class LambdaInputElement(ABC):
     """
     Your custom Event Element needs to be a child of this class
     """

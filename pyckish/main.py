@@ -5,12 +5,12 @@ from typing import Callable, Any, Type
 import pydantic
 from pydantic import BaseModel
 
-from pyckish.event_element import EventElement
+from pyckish import LambdaInputElement
 from pyckish.exceptions.missing_event_element import MissingEventElement
 from pyckish.exceptions.missing_type_hint import MissingTypeHint
 
 
-class AWSEventExtractor:
+class Lambda:
     """
     AWS Event extractor and validator.
 
@@ -59,10 +59,10 @@ class AWSEventExtractor:
         return parameter.annotation
 
     @staticmethod
-    def __get_event_element(parameter: inspect.Parameter) -> EventElement:
+    def __get_event_element(parameter: inspect.Parameter) -> LambdaInputElement:
         if parameter.default == inspect.Parameter.empty:
             raise MissingEventElement()
-        if not issubclass(type(parameter.default), EventElement):
+        if not issubclass(type(parameter.default), LambdaInputElement):
             raise MissingEventElement()
         return parameter.default
 

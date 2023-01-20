@@ -1,13 +1,14 @@
 from typing import Any
 
-from pyckish.event_element import EventElement
+from pyckish.lambda_input_element import LambdaInputElement
 
 
-class QueryParameters(EventElement):
+class QueryParameters(LambdaInputElement):
     """
     Use this class on your Lambda Handler Function.
     Extracts all HTTP Query String Parameters
     """
+
     def __init__(self) -> None:
         super().__init__()
 

@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+.tool-versions
 # C extensions
 *.so
 .idea
+.pypi_token
 # Distribution / packaging
 .Python
 build/

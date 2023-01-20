@@ -1,14 +1,15 @@
 from typing import Optional, Any
 
-from pyckish.event_element import EventElement, EMPTY
+from pyckish import LambdaInputElement, EMPTY
 from pyckish.exceptions.validation_error import ValidationError
 
 
-class Header(EventElement):
+class Header(LambdaInputElement):
     """
     Use this class on your Lambda Handler Function.
     Extracts a single HTTP Header
     """
+
     def __init__(self, alias: Optional[str] = None, default: Any = EMPTY()) -> None:
         super().__init__(alias=alias, default=default)
 

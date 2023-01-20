@@ -1,13 +1,14 @@
 from typing import Any
 
-from pyckish.event_element import EventElement
+from pyckish import LambdaInputElement
 
 
-class Headers(EventElement):
+class Headers(LambdaInputElement):
     """
     Use this class on your Lambda Handler Function.
     Extracts all HTTP Headers
     """
+
     def __init__(self) -> None:
         super().__init__()
 

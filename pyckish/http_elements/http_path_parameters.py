@@ -1,13 +1,14 @@
 from typing import Any
 
-from pyckish.event_element import EventElement
+from pyckish.lambda_input_element import LambdaInputElement
 
 
-class PathParameters(EventElement):
+class PathParameters(LambdaInputElement):
     """
     Use this class on your Lambda Handler Function.
     Extracts all HTTP Path Parameters
     """
+
     def __init__(self) -> None:
         super().__init__()
 

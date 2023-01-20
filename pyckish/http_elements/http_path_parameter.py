@@ -1,14 +1,15 @@
 from typing import Optional, Any
 
-from pyckish.event_element import EventElement
 from pyckish.exceptions.validation_error import ValidationError
+from pyckish.lambda_input_element import LambdaInputElement
 
 
-class PathParameter(EventElement):
+class PathParameter(LambdaInputElement):
     """
     Use this class on your Lambda Handler Function.
     Extracts a single HTTP Path Parameter
     """
+
     def __init__(self, alias: Optional[str] = None) -> None:
         super().__init__(alias=alias)
 

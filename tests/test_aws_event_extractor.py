@@ -3,19 +3,14 @@ import datetime
 import pyckish
 import pydantic
 
-from pyckish.http_elements import Body
-from pyckish.http_elements import Header
-from pyckish.http_elements import Headers
-from pyckish.http_elements import PathParameter
-from pyckish.http_elements import PathParameters
-from pyckish.http_elements import QueryParameter
-from pyckish.http_elements import QueryParameters
+from pyckish.http_elements import Body, Header, Headers, PathParameter, PathParameters, QueryParameter, QueryParameters
+from pyckish.basic_elements import Event, Context
 from tests.examples.event_example import EVENT_EXAMPLE
 from tests.examples.http_models import UserPathParameters, UserHeaders, UserQueryParameters, UserBody
 
 
 def test_aws_event_extract() -> None:
-    @pyckish.AWSEventExtractor()
+    @pyckish.Lambda()
     def lambda_handler(
             # Path Parameters
             param_1: int = PathParameter(),
@@ -35,7 +30,12 @@ def test_aws_event_extract() -> None:
             q_params: UserQueryParameters = QueryParameters(),
 
             # Body
-            body: UserBody = Body()
+            body: UserBody = Body(),
+
+            # Basic params
+            event: dict = Event(),
+            context: dict = Context()
+
     ) -> None:
         # Path Parameters
         assert param_1 == 200
@@ -60,5 +60,9 @@ def test_aws_event_extract() -> None:
         # Body
         assert isinstance(body, pydantic.BaseModel)
         assert isinstance(body.body_1, pydantic.BaseModel)
+
+        # Basic Parameters
+        assert event == EVENT_EXAMPLE
+        assert context == {}
 
     lambda_handler(EVENT_EXAMPLE, {})

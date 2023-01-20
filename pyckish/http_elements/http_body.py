@@ -1,13 +1,14 @@
 from typing import Optional, Any
 
-from pyckish.event_element import EventElement
+from pyckish.lambda_input_element import LambdaInputElement
 
 
-class Body(EventElement):
+class Body(LambdaInputElement):
     """
     Use this class on your Lambda Handler Function.
     Extracts an HTTP Body
     """
+
     def __init__(self, default: Optional[str] = None) -> None:
         super().__init__(default=default)
 
