@@ -1,3 +1,4 @@
+import inspect
 from abc import ABC
 from typing import Optional, Any, Protocol, runtime_checkable
 
@@ -16,8 +17,11 @@ class AllValuesExtraction(Protocol):
         ...
 
 
+EMPTY = inspect.Parameter.empty
+
+
 class EventElement(ABC):
 
-    def __init__(self, alias: Optional[str] = None, default: Optional[Any] = None) -> None:
+    def __init__(self, alias: Optional[str] = None, default: Any = EMPTY()) -> None:
         self.alias = alias
         self.default = default

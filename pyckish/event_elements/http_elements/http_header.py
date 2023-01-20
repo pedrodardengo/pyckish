@@ -1,16 +1,18 @@
 from typing import Optional, Any
 
-from pyckish.event_elements.event_element import EventElement
+from pyckish.event_elements.event_element import EventElement, EMPTY
+from pyckish.exceptions.validation_error import ValidationError
 
 
 class HTTPHeader(EventElement):
-    def __init__(self, alias: Optional[str] = None, default: Optional[Any] = None) -> None:
+    def __init__(self, alias: Optional[str] = None, default: Any = EMPTY()) -> None:
         super().__init__(alias=alias, default=default)
 
     def extract_single(self, name: str, event: dict, context: dict) -> Any:
         key = self.alias if self.alias is not None else name
         try:
-            argument = event['headers'][key]
+            return event['headers'][key]
         except (KeyError, AttributeError):
-            argument = self.default
-        return argument
+            if type(self.default) == EMPTY:
+                raise ValidationError(f'The header parameter "{key}" could not be found in the event')
+            return self.default

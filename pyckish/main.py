@@ -15,6 +15,14 @@ from pyckish.exceptions.missing_type_hint import MissingTypeHint
 class AWSEventExtractor:
     """
     AWS Event extractor and validator.
+
+    To use it just place the decorator @pyckish.AWSEventExtractor() above your handler of your AWS Lambda function.
+    Pyckish will extract, parse and validate pre-defined structures that resides in the event.
+
+    For instance, when AWS API Gateway activates an AWS Lambda, data that were within an HTTP request will reside
+    now in the Event. To quickly extract and parse that data, just like a modern back-end framework would do, use
+    pyckish.
+
     """
 
     def __init__(self) -> None:
@@ -35,7 +43,7 @@ class AWSEventExtractor:
                 self.__model_structure[parameter.name] = (annotation, ...)
             FunctionParameters = pydantic.create_model("FunctionParameters", **self.__model_structure)
             model = FunctionParameters(**self.__raw_parameters)
-            return endpoint_function(**(model.dict()))
+            return endpoint_function(**model.__dict__)
 
         return wrapper
 
