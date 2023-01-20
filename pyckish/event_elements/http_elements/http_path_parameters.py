@@ -4,6 +4,10 @@ from pyckish.event_elements.event_element import EventElement
 
 
 class HTTPPathParameters(EventElement):
+    """
+    Use this class on your Lambda Handler Function.
+    Extracts all HTTP Path Parameters
+    """
     def __init__(self) -> None:
         super().__init__()
 

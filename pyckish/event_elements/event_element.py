@@ -21,6 +21,9 @@ EMPTY = inspect.Parameter.empty
 
 
 class EventElement(ABC):
+    """
+    Your custom Event Element needs to be a child of this class
+    """
 
     def __init__(self, alias: Optional[str] = None, default: Any = EMPTY()) -> None:
         self.alias = alias

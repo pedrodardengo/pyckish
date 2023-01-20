@@ -5,6 +5,10 @@ from pyckish.exceptions.validation_error import ValidationError
 
 
 class HTTPQueryParameter(EventElement):
+    """
+    Use this class on your Lambda Handler Function.
+    Extracts a single HTTP Query String Parameter.
+    """
     def __init__(self, alias: Optional[str] = None, default: Any = EMPTY()) -> None:
         super().__init__(alias=alias, default=default)
 
