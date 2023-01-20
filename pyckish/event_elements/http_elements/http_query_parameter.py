@@ -12,8 +12,8 @@ class HTTPQueryParameter(EventElement):
     def __init__(self, alias: Optional[str] = None, default: Any = EMPTY()) -> None:
         super().__init__(alias=alias, default=default)
 
-    def extract_single(self, name: str, event: dict, context: dict) -> Any:
-        key = self.alias if self.alias is not None else name
+    def extract(self, event: dict, context: dict) -> Any:
+        key = self.alias if self.alias is not None else self.parameter_name
         try:
             return event['queryStringParameters'][key]
         except (KeyError, AttributeError):

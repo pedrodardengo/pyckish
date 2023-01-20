@@ -12,7 +12,7 @@ class HTTPBody(EventElement):
         super().__init__(default=default)
 
     @staticmethod
-    def extract_all(event: dict, context: dict) -> Any:
+    def extract(event: dict, context: dict) -> Any:
         try:
             argument = event['body']
         except KeyError:

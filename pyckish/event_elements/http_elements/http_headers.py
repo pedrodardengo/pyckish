@@ -12,7 +12,7 @@ class HTTPHeaders(EventElement):
         super().__init__()
 
     @staticmethod
-    def extract_all(event: dict, context: dict) -> Any:
+    def extract(event: dict, context: dict) -> Any:
         try:
             argument = event['headers']
         except KeyError:

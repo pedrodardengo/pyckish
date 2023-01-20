@@ -5,9 +5,7 @@ from typing import Callable, Any, Type
 import pydantic
 from pydantic import BaseModel
 
-from pyckish.event_elements.event_element import AllValuesExtraction, SingleValueExtraction, EventElement
-from pyckish.exceptions.cannot_extract_single_key import CannotExtractSingleKey
-from pyckish.exceptions.cannot_use_model import CannotUseModel
+from pyckish.event_elements.event_element import EventElement
 from pyckish.exceptions.missing_event_element import MissingEventElement
 from pyckish.exceptions.missing_type_hint import MissingTypeHint
 
@@ -50,16 +48,8 @@ class AWSEventExtractor:
     def __extract_raw_argument_from_event(self, parameter: inspect.Parameter) -> tuple[Any, type]:
         annotation = self.__get_annotation(parameter)
         event_element = self.__get_event_element(parameter)
-        if not self.__is_annotation_a_model(annotation):
-            annotation: Type
-            if not isinstance(event_element, SingleValueExtraction):
-                raise CannotExtractSingleKey(parameter.name, event_element)
-            raw_argument = event_element.extract_single(parameter.name, self.event, self.context)
-        else:
-            annotation: Type[BaseModel]
-            if not isinstance(event_element, AllValuesExtraction):
-                raise CannotUseModel(parameter.name, event_element)
-            raw_argument = event_element.extract_all(self.event, self.context)
+        event_element.parameter_name = parameter.name
+        raw_argument = event_element.extract(self.event, self.context)
         return raw_argument, annotation
 
     @staticmethod

@@ -12,8 +12,8 @@ class HTTPPathParameter(EventElement):
     def __init__(self, alias: Optional[str] = None) -> None:
         super().__init__(alias=alias)
 
-    def extract_single(self, name: str, event: dict, context: dict) -> Any:
-        key = self.alias if self.alias is not None else name
+    def extract(self, event: dict, context: dict) -> Any:
+        key = self.alias if self.alias is not None else self.parameter_name
         try:
             argument = event['pathParameters'][key]
         except (KeyError, AttributeError):

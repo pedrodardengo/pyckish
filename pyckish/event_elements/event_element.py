@@ -1,20 +1,6 @@
 import inspect
-from abc import ABC
-from typing import Optional, Any, Protocol, runtime_checkable
-
-
-@runtime_checkable
-class SingleValueExtraction(Protocol):
-
-    def extract_single(self, name: str, event: dict, context: dict) -> Any:
-        ...
-
-
-@runtime_checkable
-class AllValuesExtraction(Protocol):
-
-    def extract_all(self, event: dict, context: dict) -> Any:
-        ...
+from abc import ABC, abstractmethod
+from typing import Optional, Any
 
 
 EMPTY = inspect.Parameter.empty
@@ -28,3 +14,8 @@ class EventElement(ABC):
     def __init__(self, alias: Optional[str] = None, default: Any = EMPTY()) -> None:
         self.alias = alias
         self.default = default
+        self.parameter_name: Optional[str] = None
+
+    @abstractmethod
+    def extract(self, event: dict, context: dict) -> Any:
+        ...
