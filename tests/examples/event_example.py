@@ -19,5 +19,7 @@ EVENT_EXAMPLE = {
     'queryStringParameters': {
         'q_1': '1996-12-01',
         'q_2': []
-    }
+    },
+    'method': 'GET',
+    'path': '/a/big/path'
 }

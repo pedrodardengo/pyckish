@@ -3,7 +3,8 @@ import datetime
 import pyckish
 import pydantic
 
-from pyckish.http_elements import Body, Header, Headers, PathParameter, PathParameters, QueryParameter, QueryParameters
+from pyckish.http_elements import Body, Header, Headers, PathParameter, PathParameters, \
+    QueryParameter, QueryParameters, Method, Path
 from pyckish.basic_elements import Event, Context
 from tests.examples.event_example import EVENT_EXAMPLE
 from tests.examples.http_models import UserPathParameters, UserHeaders, UserQueryParameters, UserBody
@@ -31,6 +32,10 @@ def test_aws_event_extract() -> None:
 
             # Body
             body: UserBody = Body(),
+
+            # Other
+            path: str = Path(),
+            method: str = Method(),
 
             # Basic params
             event: dict = Event(),
@@ -64,5 +69,9 @@ def test_aws_event_extract() -> None:
         # Basic Parameters
         assert event == EVENT_EXAMPLE
         assert context == {}
+
+        # Other
+        assert path == '/a/big/path'
+        assert method == 'GET'
 
     lambda_handler(EVENT_EXAMPLE, {})
