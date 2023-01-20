@@ -31,19 +31,19 @@ class AWSEventExtractor:
         self.__raw_parameters = {}
         self.__model_structure = {}
 
-    def __call__(self, endpoint_function: Callable) -> Callable[[dict, dict], Any]:
-        @functools.wraps(endpoint_function)
+    def __call__(self, lambda_handler_function: Callable) -> Callable[[dict, dict], Any]:
+        @functools.wraps(lambda_handler_function)
         def wrapper(event: dict, context: dict) -> Any:
             self.event = event
             self.context = context
-            func_parameters = inspect.signature(endpoint_function).parameters
+            func_parameters = inspect.signature(lambda_handler_function).parameters
             for parameter in func_parameters.values():
                 raw_argument, annotation = self.__extract_raw_argument_from_event(parameter)
                 self.__raw_parameters[parameter.name] = raw_argument
                 self.__model_structure[parameter.name] = (annotation, ...)
             FunctionParameters = pydantic.create_model("FunctionParameters", **self.__model_structure)
             model = FunctionParameters(**self.__raw_parameters)
-            return endpoint_function(**model.__dict__)
+            return lambda_handler_function(**model.__dict__)
 
         return wrapper
 

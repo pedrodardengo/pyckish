@@ -5,7 +5,7 @@ import pydantic
 """These are just models used for testing purposes"""
 
 
-class UserHeader(pydantic.BaseModel):
+class UserHeaders(pydantic.BaseModel):
     header_1: list[int]
     header_2: set[str]
 
@@ -20,11 +20,11 @@ class UserBody(pydantic.BaseModel):
     body_2: set[int]
 
 
-class UserPathParameter(pydantic.BaseModel):
+class UserPathParameters(pydantic.BaseModel):
     param_1: int
-    param_2: str
+    param_2: str = pydantic.Field(alias='p_2')
 
 
-class UserQueryParam(pydantic.BaseModel):
+class UserQueryParameters(pydantic.BaseModel):
     q_1: datetime.date
-    q_3: list
+    q_2: list
