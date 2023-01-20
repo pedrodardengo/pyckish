@@ -5,7 +5,7 @@ from typing import Callable, Any, Type
 import pydantic
 from pydantic import BaseModel
 
-from pyckish.event_elements.event_element import EventElement
+from pyckish.event_element import EventElement
 from pyckish.exceptions.missing_event_element import MissingEventElement
 from pyckish.exceptions.missing_type_hint import MissingTypeHint
 

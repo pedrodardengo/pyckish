@@ -1,9 +1,9 @@
 from typing import Optional, Any
 
-from pyckish.event_elements.event_element import EventElement
+from pyckish.event_element import EventElement
 
 
-class HTTPBody(EventElement):
+class Body(EventElement):
     """
     Use this class on your Lambda Handler Function.
     Extracts an HTTP Body

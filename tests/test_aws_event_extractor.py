@@ -2,8 +2,14 @@ import datetime
 
 import pyckish
 import pydantic
-from pyckish import HTTPPathParameter, HTTPPathParameters, HTTPHeader, \
-    HTTPHeaders, HTTPQueryParameter, HTTPQueryParameters, HTTPBody
+
+from pyckish.http_elements import Body
+from pyckish.http_elements import Header
+from pyckish.http_elements import Headers
+from pyckish.http_elements import PathParameter
+from pyckish.http_elements import PathParameters
+from pyckish.http_elements import QueryParameter
+from pyckish.http_elements import QueryParameters
 from tests.examples.event_example import EVENT_EXAMPLE
 from tests.examples.http_models import UserPathParameters, UserHeaders, UserQueryParameters, UserBody
 
@@ -12,24 +18,24 @@ def test_aws_event_extract() -> None:
     @pyckish.AWSEventExtractor()
     def lambda_handler(
             # Path Parameters
-            param_1: int = HTTPPathParameter(),
-            param_2: str = HTTPPathParameter(alias='p_2'),
-            p_params: UserPathParameters = HTTPPathParameters(),
+            param_1: int = PathParameter(),
+            param_2: str = PathParameter(alias='p_2'),
+            p_params: UserPathParameters = PathParameters(),
 
             # Headers
-            header_1: list[int] = HTTPHeader(),
-            header_2: set[str] = HTTPHeader(),
-            header_3: int = HTTPHeader(default=300),
-            headers: UserHeaders = HTTPHeaders(),
+            header_1: list[int] = Header(),
+            header_2: set[str] = Header(),
+            header_3: int = Header(default=300),
+            headers: UserHeaders = Headers(),
 
             # Query Parameters
-            query_1: datetime.date = HTTPQueryParameter(alias='q_1'),
-            query_2: list[dict] = HTTPQueryParameter(alias='q_2'),
-            query_3: dict = HTTPQueryParameter(alias='q_3', default={}),
-            q_params: UserQueryParameters = HTTPQueryParameters(),
+            query_1: datetime.date = QueryParameter(alias='q_1'),
+            query_2: list[dict] = QueryParameter(alias='q_2'),
+            query_3: dict = QueryParameter(alias='q_3', default={}),
+            q_params: UserQueryParameters = QueryParameters(),
 
             # Body
-            body: UserBody = HTTPBody()
+            body: UserBody = Body()
     ) -> None:
         # Path Parameters
         assert param_1 == 200

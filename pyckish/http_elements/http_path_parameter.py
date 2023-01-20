@@ -1,10 +1,10 @@
 from typing import Optional, Any
 
-from pyckish.event_elements.event_element import EventElement
+from pyckish.event_element import EventElement
 from pyckish.exceptions.validation_error import ValidationError
 
 
-class HTTPPathParameter(EventElement):
+class PathParameter(EventElement):
     """
     Use this class on your Lambda Handler Function.
     Extracts a single HTTP Path Parameter

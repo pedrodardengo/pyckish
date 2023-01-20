@@ -23,13 +23,14 @@ def lambda_handler(event: dict, context: dict) -> float:
 #### Do this:
 ```python
 import pyckish
+from pyckish.http_elements import Body, Header, PathParameter
 from my_models import Item
 
 @pyckish.AWSEventExtractor()
 def lambda_handler(
-        auth: str = HTTPHeader(alias='authorization_token'),
-        store: str = HTTPPathParameter(default='my_store'),
-        item: Item = HTTPBody()
+        auth: str = Header(alias='authorization_token'),
+        store: str = PathParameter(default='my_store'),
+        item: Item = Body()
 ) -> float:
     user = get_user(auth)
     price = get_price(item.dict(), store, user)

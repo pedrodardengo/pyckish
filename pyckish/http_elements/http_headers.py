@@ -1,19 +1,19 @@
 from typing import Any
 
-from pyckish.event_elements.event_element import EventElement
+from pyckish.event_element import EventElement
 
 
-class HTTPPathParameters(EventElement):
+class Headers(EventElement):
     """
     Use this class on your Lambda Handler Function.
-    Extracts all HTTP Path Parameters
+    Extracts all HTTP Headers
     """
     def __init__(self) -> None:
         super().__init__()
 
     def extract(self, event: dict, context: dict) -> Any:
         try:
-            argument = event['pathParameters']
+            argument = event['headers']
         except KeyError:
             argument = {}
         return argument

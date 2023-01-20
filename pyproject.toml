@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "pyckish"
+version = "0.1.0"
+description = "Pyckish is a micro framework to easily extract/validate/parse AWS Event when using AWS Lambdas."
+authors = ["Pedro Dardengo <pedrodardengo@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^1.10.4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
