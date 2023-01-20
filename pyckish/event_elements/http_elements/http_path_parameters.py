@@ -1,16 +1,16 @@
 from typing import Any
 
-from src.event_elements.event_element import EventElement
+from pyckish.event_elements.event_element import EventElement
 
 
-class QueryParameters(EventElement):
+class HTTPPathParameters(EventElement):
     def __init__(self) -> None:
         super().__init__()
 
     @staticmethod
     def extract_all(event: dict, context: dict) -> Any:
         try:
-            argument = event['queryStringParameters']
+            argument = event['pathParameters']
         except KeyError:
             argument = {}
         return argument

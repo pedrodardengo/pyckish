@@ -1,4 +1,4 @@
-from src.event_elements.event_element import EventElement
+from pyckish.event_elements.event_element import EventElement
 
 
 class CannotUseModel(Exception):

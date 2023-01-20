@@ -5,11 +5,11 @@ from typing import Callable, Any, Type
 import pydantic
 from pydantic import BaseModel
 
-from src.event_elements.event_element import AllValuesExtraction, SingleValueExtraction, EventElement
-from src.exceptions.cannot_extract_single_key import CannotExtractSingleKey
-from src.exceptions.cannot_use_model import CannotUseModel
-from src.exceptions.missing_http_element import MissingHTTPElement
-from src.exceptions.missing_type_hint import MissingTypeHint
+from pyckish.event_elements.event_element import AllValuesExtraction, SingleValueExtraction, EventElement
+from pyckish.exceptions.cannot_extract_single_key import CannotExtractSingleKey
+from pyckish.exceptions.cannot_use_model import CannotUseModel
+from pyckish.exceptions.missing_event_element import MissingEventElement
+from pyckish.exceptions.missing_type_hint import MissingTypeHint
 
 
 class AWSEventExtractor:
@@ -41,7 +41,7 @@ class AWSEventExtractor:
 
     def __extract_raw_argument_from_event(self, parameter: inspect.Parameter) -> tuple[Any, type]:
         annotation = self.__get_annotation(parameter)
-        event_element = self.__get_http_element(parameter)
+        event_element = self.__get_event_element(parameter)
         if not self.__is_annotation_a_model(annotation):
             annotation: Type
             if not isinstance(event_element, SingleValueExtraction):
@@ -61,11 +61,11 @@ class AWSEventExtractor:
         return parameter.annotation
 
     @staticmethod
-    def __get_http_element(parameter: inspect.Parameter) -> EventElement:
+    def __get_event_element(parameter: inspect.Parameter) -> EventElement:
         if parameter.default == inspect.Parameter.empty:
-            raise MissingHTTPElement()
+            raise MissingEventElement()
         if not issubclass(type(parameter.default), EventElement):
-            raise MissingHTTPElement()
+            raise MissingEventElement()
         return parameter.default
 
     @staticmethod

@@ -1,9 +1,9 @@
 from typing import Optional, Any
 
-from src.event_elements.event_element import EventElement
+from pyckish.event_elements.event_element import EventElement
 
 
-class Body(EventElement):
+class HTTPBody(EventElement):
     def __init__(self, default: Optional[str] = None) -> None:
         super().__init__(default=default)
 

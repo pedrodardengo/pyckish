@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
 
-from src.event_elements.http_elements.body import Body
-from src.event_elements.http_elements.header import Header
-from src.event_elements.http_elements.headers import Headers
-from src.event_elements.http_elements.path_parameter import PathParameter
-from src.event_elements.http_elements.path_parameters import PathParameters
-from src.event_elements.http_elements.query_parameter import QueryParameter
-from src.main import AWSEventExtractor
+from pyckish import AWSEventExtractor
+from pyckish.event_elements.http_elements.http_body import HTTPBody
+from pyckish.event_elements.http_elements.http_header import HTTPHeader
+from pyckish.event_elements.http_elements.http_headers import HTTPHeaders
+from pyckish.event_elements.http_elements.http_path_parameter import HTTPPathParameter
+from pyckish.event_elements.http_elements.http_path_parameters import HTTPPathParameters
+from pyckish.event_elements.http_elements.http_query_parameter import HTTPQueryParameter
 
 
 class P(BaseModel):
@@ -24,13 +24,13 @@ class B(BaseModel):
 
 @AWSEventExtractor()
 def func(
-        p_1: list[str] = PathParameter(alias='param_1'),
-        p_2: P = PathParameters(),
-        h_1: str = Header(default='200'),
-        h: H = Headers(),
-        b: B = Body(),
-        q_4: dict = QueryParameter(alias='q_1'),
-        q_5: list = QueryParameter(alias='q_3'),
+        p_1: list[str] = HTTPPathParameter(alias='param_1'),
+        p_2: P = HTTPPathParameters(),
+        h_1: str = HTTPHeader(default='200'),
+        h: H = HTTPHeaders(),
+        b: B = HTTPBody(),
+        q_4: dict = HTTPQueryParameter(alias='q_1'),
+        q_5: list = HTTPQueryParameter(alias='q_3'),
 ) -> None:
     print(p_1)
     print(p_2)

@@ -1,10 +1,10 @@
 from typing import Optional, Any
 
-from src.event_elements.event_element import EventElement
-from src.exceptions.validation_error import ValidationError
+from pyckish.event_elements.event_element import EventElement
+from pyckish.exceptions.validation_error import ValidationError
 
 
-class PathParameter(EventElement):
+class HTTPPathParameter(EventElement):
     def __init__(self, alias: Optional[str] = None) -> None:
         super().__init__(alias=alias)
 
