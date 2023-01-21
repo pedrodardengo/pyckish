@@ -3,14 +3,24 @@
 </p>
 
 # Pyckish
-### AWS Lambda extractor/parser/validator" 
-Pyckish is an "extract, parse and validate" solution to allow ease of use when dealing with AWS Lambdas. It aims
-to make using Lambdas to handle HTTP requests an alternative that works similarly to other frameworks for back-end
-applications, like FastAPI.
 
-Currently, it can be used to extract HTTP data that comes in the event/context dictionary. It extracts from the dictionary,
-parses it and validates it. It relies heavily on Pydantic, and will make your life simpler if you only like to deal with validated and
-correctly typed data.
+### -- Create _AWS Lambdas_ professionally with this micro framwork
+
+
+[![PyPI](https://img.shields.io/pypi/v/pyckish)](https://pypi.org/project/pyckish/)
+
+```bash
+pip install pyckish
+```
+
+
+Pyckish is an "extract, parse and validate" solution to allow ease of use when dealing with _AWS Lambdas_, it also
+allows creation of exception handlers to deal with exceptions. It aims to make using Lambdas to handle HTTP requests 
+an alternative that works similarly to other frameworks for back-end applications, like FastAPI.
+
+Currently, it can be used to extract HTTP data that comes in the event/context dictionary. It extracts from 
+the dictionary, parses it and validates it. It relies heavily on Pydantic, and will make your life simpler if you 
+only like to deal with validated and correctly typed data.
 
 #### Instead of doing this:
 ```python
