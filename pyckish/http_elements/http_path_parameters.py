@@ -1,6 +1,6 @@
 from typing import Any
 
-from pyckish.lambda_input_element import LambdaInputElement
+from pyckish.lambda_input_element import LambdaInputElement, LambdaInput
 
 
 class PathParameters(LambdaInputElement):
@@ -12,9 +12,9 @@ class PathParameters(LambdaInputElement):
     def __init__(self) -> None:
         super().__init__()
 
-    def extract(self, event: dict, context: dict) -> Any:
+    def extract(self, lambda_input: LambdaInput) -> Any:
         try:
-            argument = event['pathParameters']
+            argument = lambda_input.event['pathParameters']
         except KeyError:
             argument = {}
         return argument

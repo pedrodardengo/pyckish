@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pyckish"
 version = "0.1.1"
-description = "Pyckish is a micro framework to easily extract/validate/parse AWS Event when using AWS Lambdas."
+description = "Pyckish is an extract/parse/validate solution to allow ease of use when dealing with AWS Lambdas."
 authors = ["Pedro Dardengo <pedrodardengo@hotmail.com>"]
 readme = "README.md"
 

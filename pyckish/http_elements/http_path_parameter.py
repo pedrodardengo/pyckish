@@ -1,7 +1,7 @@
 from typing import Optional, Any
 
 from pyckish.exceptions.validation_error import ValidationError
-from pyckish.lambda_input_element import LambdaInputElement
+from pyckish.lambda_input_element import LambdaInputElement, LambdaInput
 
 
 class PathParameter(LambdaInputElement):
@@ -13,10 +13,10 @@ class PathParameter(LambdaInputElement):
     def __init__(self, alias: Optional[str] = None) -> None:
         super().__init__(alias=alias)
 
-    def extract(self, event: dict, context: dict) -> Any:
+    def extract(self, lambda_input: LambdaInput) -> Any:
         key = self.alias if self.alias is not None else self.parameter_name
         try:
-            argument = event['pathParameters'][key]
+            argument = lambda_input.event['pathParameters'][key]
         except (KeyError, AttributeError):
             raise ValidationError(f'Path Parameter: "{key}" could not be found in event')
         return argument

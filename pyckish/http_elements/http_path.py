@@ -1,5 +1,6 @@
 from pyckish import LambdaInputElement
 from pyckish.exceptions.validation_error import ValidationError
+from pyckish.lambda_input_element import LambdaInput
 
 
 class Path(LambdaInputElement):
@@ -8,8 +9,8 @@ class Path(LambdaInputElement):
     Extracts the HTTP Method
     """
 
-    def extract(self, event: dict, context: dict) -> str:
+    def extract(self, lambda_input: LambdaInput) -> str:
         try:
-            return event['path']
+            return lambda_input.event['path']
         except KeyError:
             ValidationError('Path not present in the event')

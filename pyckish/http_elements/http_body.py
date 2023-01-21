@@ -1,6 +1,6 @@
 from typing import Optional, Any
 
-from pyckish.lambda_input_element import LambdaInputElement
+from pyckish.lambda_input_element import LambdaInputElement, LambdaInput
 
 
 class Body(LambdaInputElement):
@@ -12,9 +12,9 @@ class Body(LambdaInputElement):
     def __init__(self, default: Optional[str] = None) -> None:
         super().__init__(default=default)
 
-    def extract(self, event: dict, context: dict) -> Any:
+    def extract(self, lambda_input: LambdaInput) -> Any:
         try:
-            argument = event['body']
+            argument = lambda_input.event['body']
         except KeyError:
             argument = {}
         return argument

@@ -1,4 +1,5 @@
 from pyckish import LambdaInputElement
+from pyckish.lambda_input_element import LambdaInput
 
 
 class Context(LambdaInputElement):
@@ -7,5 +8,5 @@ class Context(LambdaInputElement):
     It just returns the raw context.
     """
 
-    def extract(self, event: dict, context: dict) -> dict:
-        return context
+    def extract(self, lambda_input: LambdaInput) -> dict:
+        return lambda_input.context

@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from pyckish import LambdaInputElement
 from pyckish.exceptions.missing_event_element import MissingEventElement
 from pyckish.exceptions.missing_type_hint import MissingTypeHint
+from pyckish.exceptions.validation_error import ValidationError
+from pyckish.lambda_input_element import LambdaInput
 
 
 class Lambda:
@@ -24,32 +26,45 @@ class Lambda:
     """
 
     def __init__(self) -> None:
-        self.event = {}
-        self.context = {}
         self.__raw_parameters = {}
         self.__model_structure = {}
+        self.exception_handling_dict: dict[Type[Exception], Callable] = {}
 
     def __call__(self, lambda_handler_function: Callable) -> Callable[[dict, dict], Any]:
         @functools.wraps(lambda_handler_function)
         def wrapper(event: dict, context: dict) -> Any:
-            self.event = event
-            self.context = context
+            lambda_input = LambdaInput(event=event, context=context)
             func_parameters = inspect.signature(lambda_handler_function).parameters
-            for parameter in func_parameters.values():
-                raw_argument, annotation = self.__extract_raw_argument_from_event(parameter)
-                self.__raw_parameters[parameter.name] = raw_argument
-                self.__model_structure[parameter.name] = (annotation, ...)
-            FunctionParameters = pydantic.create_model("FunctionParameters", **self.__model_structure)
-            model = FunctionParameters(**self.__raw_parameters)
-            return lambda_handler_function(**model.__dict__)
+            try:
+                for parameter in func_parameters.values():
+                    raw_argument, annotation = self.__extract_raw_argument_from_inputs(lambda_input, parameter)
+                    self.__raw_parameters[parameter.name] = raw_argument
+                    self.__model_structure[parameter.name] = (annotation, ...)
+                model = self.generate_model()
+                return lambda_handler_function(**model.__dict__)
+            except Exception as exception:
+                if type(exception) in self.exception_handling_dict.keys():
+                    return self.exception_handling_dict[type(exception)](lambda_input, exception)
+                raise exception
 
         return wrapper
 
-    def __extract_raw_argument_from_event(self, parameter: inspect.Parameter) -> tuple[Any, type]:
+    def generate_model(self) -> pydantic.BaseModel:
+        FunctionParameters = pydantic.create_model("FunctionParameters", **self.__model_structure)
+        try:
+            return FunctionParameters(**self.__raw_parameters)
+        except pydantic.ValidationError as exc:
+            raise ValidationError(str(exc.errors()))
+
+    def __extract_raw_argument_from_inputs(
+            self,
+            lambda_input: LambdaInput,
+            parameter: inspect.Parameter
+    ) -> tuple[Any, type]:
         annotation = self.__get_annotation(parameter)
         event_element = self.__get_event_element(parameter)
         event_element.parameter_name = parameter.name
-        raw_argument = event_element.extract(self.event, self.context)
+        raw_argument = event_element.extract(lambda_input)
         return raw_argument, annotation
 
     @staticmethod
@@ -72,3 +87,12 @@ class Lambda:
             return issubclass(annotation, BaseModel)
         except TypeError:
             return False
+
+    def add_exception_handler(
+            self,
+            exception_handler: Callable[[LambdaInput, Exception], Any],
+            exception: Type[Exception]
+    ) -> None:
+        self.exception_handling_dict = {
+            exception: exception_handler
+        }

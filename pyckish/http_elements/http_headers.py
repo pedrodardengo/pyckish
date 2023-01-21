@@ -1,6 +1,7 @@
 from typing import Any
 
 from pyckish import LambdaInputElement
+from pyckish.lambda_input_element import LambdaInput
 
 
 class Headers(LambdaInputElement):
@@ -12,9 +13,9 @@ class Headers(LambdaInputElement):
     def __init__(self) -> None:
         super().__init__()
 
-    def extract(self, event: dict, context: dict) -> Any:
+    def extract(self, lambda_input: LambdaInput) -> Any:
         try:
-            argument = event['headers']
+            argument = lambda_input.event['headers']
         except KeyError:
             argument = {}
         return argument
