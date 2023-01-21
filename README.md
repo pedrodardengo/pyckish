@@ -1,3 +1,7 @@
+<p align="center">
+  <img alt="plot" src="./docs/pyckish.png"/ height="200">
+</p>
+
 # Pyckish
 ### AWS Lambda extractor/parser/validator" 
 Pyckish is an "extract, parse and validate" solution to allow ease of use when dealing with AWS Lambdas. It aims
@@ -31,11 +35,11 @@ from my_models import Item
 @pyckish.Lambda()
 def lambda_handler(
         auth: str = Header(alias='authorization_token'),
-        store: str = PathParameter(default='my_store'),
+        store: str = PathParameter(),
         item: Item = Body()
 ) -> float:
     user = get_user(auth)
-    price = get_price(item.dict(), store, user)
+    price = get_price(item, store, user)
     return price
 ```
 
@@ -45,7 +49,7 @@ more robust codebase, leaving behind having to extract and manage issues related
 
 # Motivation
 
-Today, together with AWS API Gateway, it is possible to use only AWS Lambdas as back-end for your application.
+(Today, together with AWS API Gateway, it is possible to use only AWS Lambdas as back-end for your application.
 The problem is, unlike modern Frameworks, like FastAPI and Starlite, using only AWS Lambdas requires you to develop
 your own solutions for extracting, parsing, validating as well as creating error handling for the inputs of your code.
 There are solutions that allow you to use ASGI Frameworks with AWS Lambdas, like Mangum. But it is yet another 
@@ -57,6 +61,18 @@ from a single repository. Those "monorepos" solutions could also make heavy use 
 inputs.
 
 Right now, Pyckish is a tiny baby, and I'm not sure of its future. Weather it will become a full Framework with more
-capabilities than Chalice, or it is going to remain as a simple "extractor/parser/validator" I do not know.
+capabilities than Chalice Framework, or it is going to remain as a simple "extractor/parser/validator" I do not know.
 
-But I encourage you to try, simplicity and types will seduce you into it.
+But I encourage you to try, simplicity and types will seduce you into it.)
+
+## Usage
+_comming soon..._
+
+### _Lambda_ Decorator
+...
+
+### Custom _LambdaInputElement_
+...
+
+### Adding Error Handlers
+...
