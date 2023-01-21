@@ -21,5 +21,6 @@ EVENT_EXAMPLE = {
         'q_2': []
     },
     'method': 'GET',
-    'path': '/a/big/path'
+    'path': '/a/big/path',
+    'some_value': '200'
 }

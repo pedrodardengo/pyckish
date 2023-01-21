@@ -23,5 +23,5 @@ class LambdaInputElement(ABC):
         self.parameter_name: Optional[str] = None
 
     @abstractmethod
-    def extract(self, inputs: LambdaInput) -> Any:
+    def extract(self, lambda_input: LambdaInput) -> Any:
         ...

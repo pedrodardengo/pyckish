@@ -5,21 +5,8 @@ import pydantic
 
 from pyckish.http_elements import Body, Header, Headers, PathParameter, PathParameters, \
     QueryParameter, QueryParameters, Method, Path
-from pyckish.basic_elements import Event, Context
 from tests.examples.event_example import EVENT_EXAMPLE
 from tests.examples.http_models import UserPathParameters, UserHeaders, UserQueryParameters, UserBody
-
-
-def test_extraction_for_basic_parameters() -> None:
-    @pyckish.Lambda()
-    def lambda_handler(
-            event: dict = Event(),
-            context: dict = Context()
-    ) -> None:
-        assert event == EVENT_EXAMPLE
-        assert context == {}
-
-    lambda_handler(EVENT_EXAMPLE, {})
 
 
 def test_extraction_for_path_parameters() -> None:
