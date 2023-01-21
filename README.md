@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="plot" src="./docs/pyckish.png"/ height="200">
+  <img alt="pyckish" src="https://i.imgur.com/laQh8BT.png" height="200">
 </p>
 
 # Pyckish
