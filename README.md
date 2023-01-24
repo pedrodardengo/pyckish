@@ -4,7 +4,7 @@
 
 # Pyckish
 
-### -- Create _AWS Lambdas_ professionally with this micro framwork
+### Create _AWS Lambdas_ professionally with this micro framework
 
 
 [![PyPI](https://img.shields.io/pypi/v/pyckish)](https://pypi.org/project/pyckish/)
@@ -13,10 +13,11 @@
 pip install pyckish
 ```
 
-
-Pyckish is an "extract, parse and validate" solution to allow ease of use when dealing with _AWS Lambdas_, it also
-allows creation of exception handlers to deal with exceptions. It aims to make using Lambdas to handle HTTP requests 
-an alternative that works similarly to other frameworks for back-end applications, like FastAPI.
+Pyckish is a micro framework to deal with _AWS Lambdas_ in Python in beautiful manner, it includes an 
+"extract, parse and validate" solution for input, creation of exception handlers to deal with exceptions and better
+output, allowing you to return Pydantic models instead of dicts. One of Pyckish goals is to make using 
+"Lambdas as handlers of HTTP requests" as an alternative that works similarly to other frameworks for 
+back-end applications, like FastAPI.
 
 Currently, it can be used to extract HTTP data that comes in the event/context dictionary. It extracts from 
 the dictionary, parses it and validates it. It relies heavily on Pydantic, and will make your life simpler if you 
@@ -24,14 +25,17 @@ only like to deal with validated and correctly typed data.
 
 #### Instead of doing this:
 ```python
-def lambda_handler(event: dict, context: dict) -> float:
+# No validation
+# No parsing
+# No exception handling
+# No default value
+def lambda_handler(event: dict, context: dict) -> dict:
     auth = event['headers']['authorization_token']
     store = event['pathParameters']['store']
     item = event['body']
-    
     user = get_user(auth)
-    price = get_price(item, store, user)
-    return price
+    similar_item: dict = get_similar_item(item, store, user)
+    return similar_item
 ```
 
 #### Do this:
@@ -49,18 +53,20 @@ def lambda_handler(
         item: Item = Body()
 ) -> float:
     user = get_user(auth)
-    price = get_price(item, store, user)
-    return price
+    similar_item: Item = get_similar_item(item, store, user)
+    return similar_item
 ```
 
 And get validation and parsing free of trouble thanks to integration with Pydantic. Enjoy the advantages of a much
 more robust codebase, leaving behind having to extract and manage issues related to missing/wrong values.
 
+Though Pyckish is active development it is ready for production, since it's APIs aren't going to change.
+
 ## What are _AWS Lambda Functions_
 Lambdas are just simple functions that you can write in languages like Python, Javascript, etc. that are meant to be 
 deployed on AWS. They can be activated/triggered by AWS whenever an event happens, it might a client application 
 hitting on AWS API Gateway or a cron-job activation triggered by AWS Event Bridge. AWS manages every computer resource
-for you, this makes AWS exceptionally easy to deploy. It is integrated with most things on AWS, meaning there is almost
+for you, this makes AWS Lambdas exceptionally easy to deploy. It is integrated with most things on AWS, meaning there is almost
 always a way to do what you want with Lambdas.
 
 The interesting thing about Lambdas is that beyond being just a simple functions easy to write that you can extract data
@@ -110,8 +116,8 @@ Pyckish provides classes that allows you to extract HTTP Data from the event, su
 `PathParameter`, `PathParameters`, `Header`, `Headers`, `QueryParameter`, `QueryParameters` and `Body`. These classes
 are all children classes of _LambdaInputElement_ class.
 
-The version in the singular means they are going to extract only on parameter and requires 
-in the type annotation only the type of that specific parameter, the ones in the plural means
+The version in the singular means they are going to extract only one parameter. They require 
+a type annotation that it the type of that specific parameter. The ones in the plural means
 they are going to extract all parameters at once, the type annotation needs to be a Pydantic Model.
 
 Checkout the difference:

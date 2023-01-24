@@ -1,13 +1,13 @@
 import functools
 import inspect
-from typing import Callable, Any, Type
+from typing import Callable, Any, Type, Optional, Union
 
 import pydantic
-from pydantic import BaseModel
 
 from pyckish import LambdaInputElement
 from pyckish.exceptions.missing_type_hint import MissingTypeHint
 from pyckish.exceptions.validation_error import ValidationError
+from pyckish.http_elements.http_response import HTTPResponse
 from pyckish.lambda_input_element import LambdaInput
 
 
@@ -24,7 +24,27 @@ class Lambda:
 
     """
 
-    def __init__(self) -> None:
+    def __init__(
+            self,
+            is_http: bool = False,
+            response_status_code: Optional[int] = None,
+            response_model_exclude_unset: bool = False,
+            response_model_exclude_defaults: bool = False,
+            response_model_exclude_none: bool = False,
+            response_model_by_alias: bool = False,
+            response_model_include: Optional[Union[set[Union[int, str]], dict[Union[int, str], Any]]] = None,
+            response_model_exclude: Optional[Union[set[Union[int, str]], dict[Union[int, str], Any]]] = None
+    ) -> None:
+        self.__is_http = is_http
+        self.__response_status_code = response_status_code
+        self.__response_config = {
+            'exclude_unset': response_model_exclude_unset,
+            'exclude_defaults': response_model_exclude_defaults,
+            'exclude_none': response_model_exclude_none,
+            'by_alias': response_model_by_alias,
+            'include': response_model_include,
+            'exclude': response_model_exclude
+        }
         self.__raw_parameters = {}
         self.__model_structure = {}
         self.exception_handling_dict: dict[Type[Exception], Callable] = {}
@@ -41,11 +61,12 @@ class Lambda:
                     self.__raw_parameters[parameter.name] = raw_argument
                     self.__model_structure[parameter.name] = (annotation, ...)
                 model = self.__generate_model()
-                return lambda_handler_function(**model.__dict__)
+                result = lambda_handler_function(**model.__dict__)
             except Exception as exception:
                 if type(exception) in self.exception_handling_dict.keys():
                     return self.exception_handling_dict[type(exception)](lambda_input, exception)
                 raise exception
+            return self.__prepare_response(result)
 
         return wrapper
 
@@ -57,6 +78,19 @@ class Lambda:
         self.exception_handling_dict = {
             exception: exception_handler
         }
+
+    def __prepare_response(self, result: Any) -> Any:
+        if isinstance(result, HTTPResponse):
+            result.status_code = self.__response_status_code if result.status_code is None else result.status_code
+            return result()
+        if isinstance(result, pydantic.BaseModel):
+            result = result.dict(**self.__response_config)
+        if self.__is_http:
+            return HTTPResponse(
+                body=result,
+                status_code=self.__response_status_code
+            )()
+        return result
 
     def __generate_model(self) -> pydantic.BaseModel:
         FunctionParameters = pydantic.create_model("FunctionParameters", **self.__model_structure)
@@ -91,6 +125,6 @@ class Lambda:
     @staticmethod
     def __is_annotation_a_model(annotation: Type) -> bool:
         try:
-            return issubclass(annotation, BaseModel)
+            return issubclass(annotation, pydantic.BaseModel)
         except TypeError:
             return False
