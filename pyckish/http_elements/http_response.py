@@ -1,4 +1,5 @@
 import dataclasses
+import json
 from typing import Any, Optional
 
 import pyckish.types.http_codes as status
@@ -11,14 +12,14 @@ class HTTPResponse:
     status_code: Optional[int] = None
 
     def __call__(self) -> dict:
-        response_dict = {}
+        response_dict = {'isBase64Encoded': False}
         if self.body:
-            response_dict['Body'] = self.body
+            response_dict['body'] = json.dumps(self.body)
         if self.headers:
             if 'Content-Type' not in self.headers.keys():
                 self.headers['Content-Type'] = 'application/json'
         else:
             self.headers = {'Content-Type': 'application/json'}
-        response_dict['Headers'] = self.headers
-        response_dict['StatusCode'] = self.status_code if self.status_code else status.HTTP_201_CREATED
+        response_dict['headers'] = self.headers
+        response_dict['statusCode'] = self.status_code if self.status_code else status.HTTP_201_CREATED
         return response_dict

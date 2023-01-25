@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 import pydantic
@@ -10,23 +11,24 @@ from tests.examples.event_example import EVENT_EXAMPLE
 
 def test_http_response_non_dict_return() -> None:
     # Arrange
-    message = "Hello World"
+    message = 'Hello World'
 
     @pyckish.Lambda(
         is_http=True,
         response_status_code=status.HTTP_201_CREATED
     )
     def lambda_handler() -> str:
-        return "Hello World"
+        return message
 
     # Act
     response = lambda_handler(EVENT_EXAMPLE, {})
 
     # Assert
     assert response == {
-        'Body': message,
-        'Headers': {'Content-Type': 'application/json'},
-        'StatusCode': status.HTTP_201_CREATED
+        'isBase64Encoded': False,
+        'body': json.dumps(message),
+        'headers': {'Content-Type': 'application/json'},
+        'statusCode': status.HTTP_201_CREATED
     }
 
 
@@ -56,11 +58,12 @@ def test_http_response_model_return() -> None:
 
     # Assert
     assert response == {
-        'Body': {
+        'isBase64Encoded': False,
+        'body': json.dumps({
             'Value': 300
-        },
-        'Headers': {'Content-Type': 'application/json'},
-        'StatusCode': status.HTTP_202_ACCEPTED
+        }),
+        'headers': {'Content-Type': 'application/json'},
+        'statusCode': status.HTTP_202_ACCEPTED
     }
 
 
@@ -82,10 +85,11 @@ def test_http_response_as_response() -> None:
 
     # Assert
     assert response == {
-        'Body': 'Hello World',
-        'Headers': {
+        'isBase64Encoded': False,
+        'body': json.dumps('Hello World'),
+        'headers': {
             'Content-Type': 'application/json',
             'my_header': 'a_value'
         },
-        'StatusCode': status.HTTP_201_CREATED
+        'statusCode': status.HTTP_201_CREATED
     }

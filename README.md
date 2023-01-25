@@ -60,8 +60,6 @@ def lambda_handler(
 And get validation and parsing free of trouble thanks to integration with Pydantic. Enjoy the advantages of a much
 more robust codebase, leaving behind having to extract and manage issues related to missing/wrong values.
 
-Though Pyckish is active development it is ready for production, since it's APIs aren't going to change.
-
 ## What are _AWS Lambda Functions_
 
 Lambdas are just simple functions that you can write in languages like Python, Javascript, etc. that are meant to be
