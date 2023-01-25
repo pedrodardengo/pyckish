@@ -7,3 +7,4 @@ from pyckish.http_elements.http_path_parameter import PathParameter
 from pyckish.http_elements.http_path_parameters import PathParameters
 from pyckish.http_elements.http_query_parameter import QueryParameter
 from pyckish.http_elements.http_query_parameters import QueryParameters
+from pyckish.http_elements.http_response import HTTPResponse
