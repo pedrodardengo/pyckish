@@ -32,7 +32,10 @@ class Lambda:
             response_model_exclude_none: bool = False,
             response_model_by_alias: bool = False,
             response_model_include: Optional[Union[set[Union[int, str]], dict[Union[int, str], Any]]] = None,
-            response_model_exclude: Optional[Union[set[Union[int, str]], dict[Union[int, str], Any]]] = None
+            response_model_exclude: Optional[Union[set[Union[int, str]], dict[Union[int, str], Any]]] = None,
+            exception_to_handler_mapping: Optional[
+                dict[Type[Exception], Callable[[LambdaInput, Exception], Any]]
+            ] = None
     ) -> None:
         self.__is_http = is_http
         self.__response_status_code = response_status_code
@@ -46,7 +49,7 @@ class Lambda:
         }
         self.__raw_parameters = {}
         self.__model_structure = {}
-        self.exception_handling_dict: dict[Type[Exception], Callable] = {}
+        self.exception_handling_dict = {} if exception_to_handler_mapping is None else exception_to_handler_mapping
 
     def __call__(self, lambda_handler_function: Callable) -> Callable[[dict, dict], Any]:
         @functools.wraps(lambda_handler_function)

@@ -28,6 +28,26 @@ def test_error_handling_for_validation_error() -> None:
     assert result == error_message
 
 
+def test_error_handling_by_handler_mapping_config() -> None:
+    # Arrange
+    error_message = {'message': 'validation error'}
+
+    def handle_validation_error(inputs: LambdaInput, exception: Exception) -> Any:
+        return error_message
+
+    @pyckish.Lambda(
+        exception_to_handler_mapping={ValidationError: handle_validation_error}
+    )
+    def lambda_handler(method: str = Method()) -> str:
+        return method
+
+    # Act
+    result = lambda_handler({}, {})
+
+    # Assert
+    assert result == error_message
+
+
 def test_error_handling_for_some_error() -> None:
     # Arrange
     error_message = {'message': 'An error'}
