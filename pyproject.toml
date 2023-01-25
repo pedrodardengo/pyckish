@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "pyckish"
-version = "0.4.2"
+version = "0.4.3"
 description = "Pyckish is a micro framework to deal with AWS Lambdas in Python in beautiful manner."
 authors = ["Pedro Dardengo <pedrodardengo@hotmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "~3.9"
-pydantic = "1.10.4"
+pydantic = "^1.9"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "7.2.1"
