@@ -1,4 +1,3 @@
-
 """This is an example of event used for testing purposes"""
 EVENT_EXAMPLE = {
     'pathParameters': {

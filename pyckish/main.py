@@ -5,7 +5,6 @@ from typing import Callable, Any, Type, Optional, Union
 import pydantic
 
 from pyckish import LambdaInputElement
-from pyckish.exceptions.missing_type_hint import MissingTypeHint
 from pyckish.exceptions.validation_error import ValidationError
 from pyckish.http_elements.http_response import HTTPResponse
 from pyckish.lambda_input_element import LambdaInput
@@ -119,7 +118,7 @@ class Lambda:
     @staticmethod
     def __get_annotation(parameter: inspect.Parameter) -> Type:
         if parameter.annotation == inspect.Parameter.empty:
-            raise MissingTypeHint()
+            return Any
         return parameter.annotation
 
     @staticmethod

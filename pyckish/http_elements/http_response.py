@@ -1,11 +1,11 @@
 import dataclasses
-import pyckish.types.http_codes as status
 from typing import Any, Optional
+
+import pyckish.types.http_codes as status
 
 
 @dataclasses.dataclass
 class HTTPResponse:
-
     body: Any = None
     headers: Optional[dict] = None
     status_code: Optional[int] = None

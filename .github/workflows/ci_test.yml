@@ -1,23 +1,23 @@
 name: TestOnPush
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9.13"]
+        python-version: [ "3.9.13" ]
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
-      with:
-        python-version: '3.9.13'
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip && pip install --upgrade setuptools && pip install poetry
-        poetry export --without-hashes > requirements.txt && pip install -r requirements.txt
-        pip install pytest
-    - name: Test with pytest
-      run: |
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.9.13'
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip && pip install --upgrade setuptools && pip install poetry
+          poetry export --without-hashes > requirements.txt && pip install -r requirements.txt
+          pip install pytest
+      - name: Test with pytest
+        run: |
           python3 -m pytest

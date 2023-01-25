@@ -1,8 +1,8 @@
 import datetime
 
-import pyckish
 import pydantic
 
+import pyckish
 from pyckish.http_elements import Body, Header, Headers, PathParameter, PathParameters, \
     QueryParameter, QueryParameters, Method, Path
 from tests.examples.event_example import EVENT_EXAMPLE
