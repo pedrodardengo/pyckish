@@ -1,3 +1,5 @@
+import json
+
 import pyckish
 
 
@@ -11,4 +13,4 @@ def test_using_pyckish_on_a_parameterless_function() -> None:
     result = lambda_handler({}, {})
 
     # Assert
-    assert result == 'Hello'
+    assert json.loads(result) == 'Hello'

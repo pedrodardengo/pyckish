@@ -1,5 +1,6 @@
 import functools
 import inspect
+import json
 from typing import Callable, Any, Type, Optional, Union
 
 import pydantic
@@ -72,7 +73,8 @@ class Lambda:
                 result = self.__execute_chain_of_outbound_interceptors(result)
             except Exception as exception:
                 if type(exception) in self.__exception_handling_dict.keys():
-                    return self.__exception_handling_dict[type(exception)](event, context, exception)
+                    result = self.__exception_handling_dict[type(exception)](event, context, exception)
+                    return self.__prepare_response(result)
                 raise exception
             return self.__prepare_response(result)
 
@@ -102,13 +104,13 @@ class Lambda:
             result.status_code = self.__response_status_code if result.status_code is None else result.status_code
             return result()
         if isinstance(result, pydantic.BaseModel):
-            result = result.dict(**self.__response_config)
+            result = json.loads(result.json(**self.__response_config))
         if self.__is_http:
             return HTTPResponse(
                 body=result,
                 status_code=self.__response_status_code
             )()
-        return result
+        return json.dumps(result)
 
     def __generate_model(self) -> pydantic.BaseModel:
         FunctionParameters = pydantic.create_model("FunctionParameters", **self.__model_structure)

@@ -1,3 +1,4 @@
+import json
 from typing import Any
 
 import pyckish
@@ -24,7 +25,7 @@ def test_error_handling_for_validation_error() -> None:
     result = lambda_handler({}, {})
 
     # Assert
-    assert result == error_message
+    assert json.loads(result) == error_message
 
 
 def test_error_handling_by_handler_mapping_config() -> None:
@@ -44,7 +45,7 @@ def test_error_handling_by_handler_mapping_config() -> None:
     result = lambda_handler({}, {})
 
     # Assert
-    assert result == error_message
+    assert json.loads(result) == error_message
 
 
 def test_error_handling_for_some_error() -> None:
@@ -67,4 +68,4 @@ def test_error_handling_for_some_error() -> None:
     result = lambda_handler(EVENT_EXAMPLE, {})
 
     # Assert
-    assert result == error_message
+    assert json.loads(result) == error_message
