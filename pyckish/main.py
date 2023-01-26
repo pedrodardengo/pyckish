@@ -54,7 +54,7 @@ class Lambda:
         self.__outbound_interceptors = [] if outbound_interceptors is None else outbound_interceptors
         self.__exception_handling_dict = {} if exception_to_handler_mapping is None else exception_to_handler_mapping
 
-    def __call__(self, lambda_handler_function: Callable) -> Callable[[dict, dict], Any]:
+    def __call__(self, lambda_handler_function: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(lambda_handler_function)
         def wrapper(event: dict, context: dict) -> Any:
             func_parameters = inspect.signature(lambda_handler_function).parameters
