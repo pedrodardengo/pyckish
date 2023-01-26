@@ -69,3 +69,28 @@ def test_error_handling_for_some_error() -> None:
 
     # Assert
     assert json.loads(result) == error_message
+
+
+def test_error_handling_generic_error() -> None:
+    # Arrange
+    error_message = {'message': 'An error'}
+    pyckish_lambda = pyckish.Lambda()
+
+    def handle_validation_error(event: dict, context: dict, exception: Exception) -> dict:
+        return error_message
+
+    pyckish_lambda.add_exception_handler(handle_validation_error, Exception)
+
+    @pyckish_lambda
+    def lambda_handler(method: str = Method()) -> str:
+        if method:
+            raise KeyError
+        return method
+
+    # Act
+    result = lambda_handler(EVENT_EXAMPLE, {})
+
+    # Assert
+    assert json.loads(result) == error_message
+
+

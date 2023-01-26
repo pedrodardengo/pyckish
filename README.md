@@ -12,7 +12,7 @@
 pip install pyckish
 ```
 
-Pyckish is a micro framework to deal with _AWS Lambdas_ in Python in beautiful manner, it includes an
+Pyckish is a micro framework for creating AWS Lambdas in Python in beautiful manner. It includes an
 "extract, parse and validate" solution for input, creation of exception handlers to deal with exceptions and better
 output, allowing you to return Pydantic models instead of dicts. One of Pyckish goals is to make using
 "Lambdas as handlers of HTTP requests" as an alternative that works similarly to other frameworks for

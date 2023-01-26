@@ -57,7 +57,7 @@ class Lambda:
 
     def __call__(self, lambda_handler_function: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(lambda_handler_function)
-        def wrapper(event: dict, context: dict) -> Any:
+        def wrapper(event: dict, context: dict) -> str:
             func_parameters = inspect.signature(lambda_handler_function).parameters
             try:
                 intercepted_event, intercepted_context = self.__execute_chain_of_inbound_interceptors(event, context)
@@ -72,10 +72,7 @@ class Lambda:
                 result = lambda_handler_function(**model.__dict__)
                 result = self.__execute_chain_of_outbound_interceptors(result)
             except Exception as exception:
-                if type(exception) in self.__exception_handling_dict.keys():
-                    result = self.__exception_handling_dict[type(exception)](event, context, exception)
-                    return self.__prepare_response(result)
-                raise exception
+                return self.__deal_with_exception(event, context, exception)
             return self.__prepare_response(result)
 
         return wrapper
@@ -89,6 +86,21 @@ class Lambda:
             exception: exception_handler
         }
 
+    def __should_handle_exception(self, exception) -> bool:
+        if Exception in self.__exception_handling_dict.keys():
+            return True
+        return any([isinstance(exception, t_exc) for t_exc in self.__exception_handling_dict.keys()])
+
+    def __deal_with_exception(self, event, context, exception) -> Any:
+        for t_exc in self.__exception_handling_dict.keys():
+            if t_exc != Exception and isinstance(exception, t_exc):
+                result = self.__exception_handling_dict[t_exc](event, context, exception)
+                return self.__prepare_response(result)
+        if self.__exception_handling_dict.get(Exception, None):
+            result = self.__exception_handling_dict[Exception](event, context, exception)
+            return self.__prepare_response(result)
+        raise exception
+
     def __execute_chain_of_inbound_interceptors(self, event: dict, context: dict) -> tuple[dict, dict]:
         for interceptor in self.__inbound_interceptors:
             event, context = interceptor(event, context)
@@ -99,7 +111,7 @@ class Lambda:
             output = interceptor(output)
         return output
 
-    def __prepare_response(self, result: Any) -> Any:
+    def __prepare_response(self, result: Any) -> str:
         if isinstance(result, HTTPResponse):
             result.status_code = self.__response_status_code if result.status_code is None else result.status_code
             return result()
