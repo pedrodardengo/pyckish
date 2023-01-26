@@ -244,3 +244,7 @@ a response to its client. By using the flag, `is_http=True` in the Lambda decora
 be sent as `Body` parameter to _AWS API Gateway_, you can also specify the status code directly on the decorator (this
 status code will be used in case of success) or by specifying a `HTTPResponse` object as a return of your function.
 Headers can also be specified in the `HTTPResponse` object.
+
+### Add inbound and outbound interceptors
+
+...

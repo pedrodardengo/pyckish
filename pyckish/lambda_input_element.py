@@ -1,15 +1,8 @@
-import dataclasses
 import inspect
 from abc import ABC, abstractmethod
 from typing import Optional, Any
 
 EMPTY = inspect.Parameter.empty
-
-
-@dataclasses.dataclass
-class LambdaInput:
-    event: dict
-    context: dict
 
 
 class LambdaInputElement(ABC):
@@ -23,5 +16,5 @@ class LambdaInputElement(ABC):
         self.parameter_name: Optional[str] = None
 
     @abstractmethod
-    def extract(self, lambda_input: LambdaInput) -> Any:
+    def extract(self, event: dict, context: dict) -> Any:
         ...

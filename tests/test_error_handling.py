@@ -3,7 +3,6 @@ from typing import Any
 import pyckish
 from pyckish.exceptions.validation_error import ValidationError
 from pyckish.http_elements import Method
-from pyckish.lambda_input_element import LambdaInput
 from tests.examples.event_example import EVENT_EXAMPLE
 
 
@@ -12,7 +11,7 @@ def test_error_handling_for_validation_error() -> None:
     error_message = {'message': 'validation error'}
     pyckish_lambda = pyckish.Lambda()
 
-    def handle_validation_error(inputs: LambdaInput, exception: Exception) -> Any:
+    def handle_validation_error(event: dict, context: dict, exception: Exception) -> Any:
         return error_message
 
     pyckish_lambda.add_exception_handler(handle_validation_error, ValidationError)
@@ -32,7 +31,7 @@ def test_error_handling_by_handler_mapping_config() -> None:
     # Arrange
     error_message = {'message': 'validation error'}
 
-    def handle_validation_error(inputs: LambdaInput, exception: Exception) -> Any:
+    def handle_validation_error(event: dict, context: dict, exception: Exception) -> Any:
         return error_message
 
     @pyckish.Lambda(
@@ -53,7 +52,7 @@ def test_error_handling_for_some_error() -> None:
     error_message = {'message': 'An error'}
     pyckish_lambda = pyckish.Lambda()
 
-    def handle_validation_error(inputs: LambdaInput, exception: Exception) -> dict:
+    def handle_validation_error(event: dict, context: dict, exception: Exception) -> dict:
         return error_message
 
     pyckish_lambda.add_exception_handler(handle_validation_error, KeyError)

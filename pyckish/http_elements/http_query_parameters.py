@@ -1,6 +1,6 @@
 from typing import Any
 
-from pyckish.lambda_input_element import LambdaInputElement, LambdaInput
+from pyckish.lambda_input_element import LambdaInputElement
 
 
 class QueryParameters(LambdaInputElement):
@@ -12,9 +12,9 @@ class QueryParameters(LambdaInputElement):
     def __init__(self) -> None:
         super().__init__()
 
-    def extract(self, lambda_input: LambdaInput) -> Any:
+    def extract(self, event: dict, context: dict) -> Any:
         try:
-            argument = lambda_input.event['queryStringParameters']
+            argument = event['queryStringParameters']
         except KeyError:
             argument = {}
         return argument

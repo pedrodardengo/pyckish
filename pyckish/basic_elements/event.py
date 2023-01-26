@@ -1,5 +1,4 @@
 from pyckish import LambdaInputElement
-from pyckish.lambda_input_element import LambdaInput
 
 
 class Event(LambdaInputElement):
@@ -8,5 +7,5 @@ class Event(LambdaInputElement):
     It just returns the raw event.
     """
 
-    def extract(self, lambda_input: LambdaInput) -> dict:
-        return lambda_input.event
+    def extract(self, event: dict, context: dict) -> dict:
+        return event
