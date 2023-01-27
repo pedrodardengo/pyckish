@@ -30,7 +30,8 @@ def test_prepare_response_with_http_response():
     result = response_handler.prepare_response(http_response)
 
     # Assert
-    assert json.loads(result) == {
+    result['body'] = json.loads(result['body'])
+    assert result == {
         "isBase64Encoded": False,
         "body": {"test": "body"},
         "headers": {'Content-Type': 'application/json'},
@@ -56,7 +57,8 @@ def test_prepare_response_with_pydantic_model():
     result = response_handler.prepare_response(model)
 
     # Assert
-    assert json.loads(result) == {
+    result['body'] = json.loads(result['body'])
+    assert result == {
         "isBase64Encoded": False,
         "body": {"id": 1, "name": "test", "description": "test"},
         "headers": {'Content-Type': 'application/json'},
@@ -81,7 +83,8 @@ def test_prepare_response_with_dict_input():
     result = response_handler.prepare_response({'test': 'body'})
 
     # Assert
-    assert json.loads(result) == {
+    result['body'] = json.loads(result['body'])
+    assert result == {
         "isBase64Encoded": False,
         "body": {"test": "body"},
         "headers": {'Content-Type': 'application/json'},

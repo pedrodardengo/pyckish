@@ -24,7 +24,8 @@ def test_http_response_non_dict_return() -> None:
     response = lambda_handler(EVENT_EXAMPLE, {})
 
     # Assert
-    assert json.loads(response) == {
+    response['body'] = json.loads(response['body'])
+    assert response == {
         'isBase64Encoded': False,
         'body': message,
         'headers': {'Content-Type': 'application/json'},
@@ -57,7 +58,8 @@ def test_http_response_model_return() -> None:
     response = lambda_handler(EVENT_EXAMPLE, {})
 
     # Assert
-    assert json.loads(response) == {
+    response['body'] = json.loads(response['body'])
+    assert response == {
         'isBase64Encoded': False,
         'body': {
             'Value': 300
@@ -84,7 +86,8 @@ def test_http_response_as_response() -> None:
     response = lambda_handler(EVENT_EXAMPLE, {})
 
     # Assert
-    assert json.loads(response) == {
+    response['body'] = json.loads(response['body'])
+    assert response == {
         'isBase64Encoded': False,
         'body': 'Hello World',
         'headers': {

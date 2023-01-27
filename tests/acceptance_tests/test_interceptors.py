@@ -1,5 +1,3 @@
-import json
-
 import pyckish
 from pyckish.basic_elements import Event
 
@@ -22,7 +20,7 @@ def test_inbound_interceptors() -> None:
     result = lambda_handler({}, {})
 
     # Assert
-    assert json.loads(result) == {'1': 1, '2': 2, '3': 3}
+    assert result == {1: 1, 2: 2, 3: 3}
 
 
 def test_outbound_interceptors() -> None:
@@ -43,4 +41,4 @@ def test_outbound_interceptors() -> None:
     result = lambda_handler({'value': 1}, {})
 
     # Assert
-    assert json.loads(result) == 7
+    assert result == 7

@@ -35,15 +35,13 @@ class ResponseHandler:
             'exclude': exclude
         }
 
-    def prepare_response(self, result: Any) -> str:
+    def prepare_response(self, result: Any) -> dict:
         if isinstance(result, HTTPResponse):
             result.status_code = self.__status_code if result.status_code is None else result.status_code
-            return result()
-        if isinstance(result, pydantic.BaseModel):
-            result = json.loads(result.json(**self.__response_config))
+            return result(self.__response_config)
         if self.__is_http:
             return HTTPResponse(
                 body=result,
                 status_code=self.__status_code
-            )()
-        return json.dumps(result)
+            )(self.__response_config)
+        return result
