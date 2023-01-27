@@ -1,13 +1,10 @@
 import functools
-import inspect
-import json
-from typing import Callable, Any, Type, Optional, Union
+from typing import Callable, Any, Type, Optional
 
-import pydantic
-
-from pyckish import LambdaInputElement
-from pyckish.exceptions.validation_error import ValidationError
-from pyckish.http_elements.http_response import HTTPResponse
+from pyckish.internal_handlers.exception_handler import ExceptionHandler, ExcHandler
+from pyckish.internal_handlers.interceptor_handler import InterceptorHandler, InboundInterceptor, OutboundInterceptor
+from pyckish.internal_handlers.parameter_handler import ParameterHandler
+from pyckish.internal_handlers.response_handler import ResponseHandler, DictOrSetIntStr
 
 
 class Lambda:
@@ -31,133 +28,40 @@ class Lambda:
             response_model_exclude_defaults: bool = False,
             response_model_exclude_none: bool = False,
             response_model_by_alias: bool = False,
-            response_model_include: Optional[Union[set[Union[int, str]], dict[Union[int, str], Any]]] = None,
-            response_model_exclude: Optional[Union[set[Union[int, str]], dict[Union[int, str], Any]]] = None,
-            exception_to_handler_mapping: Optional[
-                dict[Type[Exception], Callable[[dict, dict, Exception], Any]]
-            ] = None,
-            inbound_interceptors: Optional[list[Callable[[dict, dict], tuple[dict, dict]]]] = None,
-            outbound_interceptors: Optional[list[Callable[[Any], Any]]] = None
+            response_model_include: Optional[DictOrSetIntStr] = None,
+            response_model_exclude: Optional[DictOrSetIntStr] = None,
+            exception_to_handler_mapping: Optional[dict[Type[Exception], ExcHandler]] = None,
+            inbound_interceptors: Optional[list[InboundInterceptor]] = None,
+            outbound_interceptors: Optional[list[OutboundInterceptor]] = None
     ) -> None:
-        self.__is_http = is_http
-        self.__response_status_code = response_status_code
-        self.__response_config = {
-            'exclude_unset': response_model_exclude_unset,
-            'exclude_defaults': response_model_exclude_defaults,
-            'exclude_none': response_model_exclude_none,
-            'by_alias': response_model_by_alias,
-            'include': response_model_include,
-            'exclude': response_model_exclude
-        }
-        self.__raw_parameters = {}
-        self.__model_structure = {}
-        self.__inbound_interceptors = [] if inbound_interceptors is None else inbound_interceptors
-        self.__outbound_interceptors = [] if outbound_interceptors is None else outbound_interceptors
-        self.__exception_handling_dict = {} if exception_to_handler_mapping is None else exception_to_handler_mapping
+        self.__interceptor_handler = InterceptorHandler(inbound_interceptors, outbound_interceptors)
+        self.__parameter_handler = ParameterHandler()
+        self.__exception_handler = ExceptionHandler(exception_to_handler_mapping)
+        self.__response_handler = ResponseHandler(
+            is_http=is_http,
+            status_code=response_status_code,
+            exclude_unset=response_model_exclude_unset,
+            exclude_defaults=response_model_exclude_defaults,
+            exclude_none=response_model_exclude_none,
+            by_alias=response_model_by_alias,
+            include=response_model_include,
+            exclude=response_model_exclude
+        )
 
     def __call__(self, lambda_handler_function: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(lambda_handler_function)
         def wrapper(event: dict, context: dict) -> str:
-            func_parameters = inspect.signature(lambda_handler_function).parameters
             try:
-                intercepted_event, intercepted_context = self.__execute_chain_of_inbound_interceptors(event, context)
-                for parameter in func_parameters.values():
-                    annotation = self.__get_annotation(parameter)
-                    raw_argument = self.__extract_raw_argument_from_inputs(
-                        intercepted_event, intercepted_context, parameter
-                    )
-                    self.__raw_parameters[parameter.name] = raw_argument
-                    self.__model_structure[parameter.name] = (annotation, ...)
-                model = self.__generate_model()
-                result = lambda_handler_function(**model.__dict__)
-                result = self.__execute_chain_of_outbound_interceptors(result)
+                intercepted_event, intercepted_context = \
+                    self.__interceptor_handler.execute_chain_of_inbound_interceptors(event, context)
+
+                parameter_value_dict = self.__parameter_handler.generate_parameter_value_dict_for_lambda_function(
+                    intercepted_event, intercepted_context, lambda_handler_function
+                )
+                result = lambda_handler_function(**parameter_value_dict)
+                result = self.__interceptor_handler.execute_chain_of_outbound_interceptors(result)
             except Exception as exception:
-                return self.__deal_with_exception(event, context, exception)
-            return self.__prepare_response(result)
+                result = self.__exception_handler.deal_with_exception(event, context, exception)
+            return self.__response_handler.prepare_response(result)
 
         return wrapper
-
-    def add_exception_handler(
-            self,
-            exception_handler: Callable[[dict, dict, Exception], Any],
-            exception: Type[Exception]
-    ) -> None:
-        self.__exception_handling_dict = {
-            exception: exception_handler
-        }
-
-    def __should_handle_exception(self, exception) -> bool:
-        if Exception in self.__exception_handling_dict.keys():
-            return True
-        return any([isinstance(exception, t_exc) for t_exc in self.__exception_handling_dict.keys()])
-
-    def __deal_with_exception(self, event, context, exception) -> Any:
-        for t_exc in self.__exception_handling_dict.keys():
-            if t_exc != Exception and isinstance(exception, t_exc):
-                result = self.__exception_handling_dict[t_exc](event, context, exception)
-                return self.__prepare_response(result)
-        if self.__exception_handling_dict.get(Exception, None):
-            result = self.__exception_handling_dict[Exception](event, context, exception)
-            return self.__prepare_response(result)
-        raise exception
-
-    def __execute_chain_of_inbound_interceptors(self, event: dict, context: dict) -> tuple[dict, dict]:
-        for interceptor in self.__inbound_interceptors:
-            event, context = interceptor(event, context)
-        return event, context
-
-    def __execute_chain_of_outbound_interceptors(self, output: Any) -> tuple[dict, dict]:
-        for interceptor in self.__outbound_interceptors:
-            output = interceptor(output)
-        return output
-
-    def __prepare_response(self, result: Any) -> str:
-        if isinstance(result, HTTPResponse):
-            result.status_code = self.__response_status_code if result.status_code is None else result.status_code
-            return result()
-        if isinstance(result, pydantic.BaseModel):
-            result = json.loads(result.json(**self.__response_config))
-        if self.__is_http:
-            return HTTPResponse(
-                body=result,
-                status_code=self.__response_status_code
-            )()
-        return json.dumps(result)
-
-    def __generate_model(self) -> pydantic.BaseModel:
-        FunctionParameters = pydantic.create_model("FunctionParameters", **self.__model_structure)
-        try:
-            return FunctionParameters(**self.__raw_parameters)
-        except pydantic.ValidationError as exc:
-            raise ValidationError(str(exc.errors()))
-
-    @staticmethod
-    def __extract_raw_argument_from_inputs(
-            event: dict,
-            context: dict,
-            parameter: inspect.Parameter
-    ) -> tuple[Any, type]:
-        if not issubclass(type(parameter.default), LambdaInputElement):
-            try:
-                return event[parameter.name]
-            except KeyError:
-                if parameter.default == inspect.Parameter.empty:
-                    raise ValidationError(f'Parameter {parameter.name} is missing')
-                return parameter.default
-        lambda_input_element = parameter.default
-        lambda_input_element.parameter_name = parameter.name
-        raw_argument = lambda_input_element.extract(event, context)
-        return raw_argument
-
-    @staticmethod
-    def __get_annotation(parameter: inspect.Parameter) -> Type:
-        if parameter.annotation == inspect.Parameter.empty:
-            return Any
-        return parameter.annotation
-
-    @staticmethod
-    def __is_annotation_a_model(annotation: Type) -> bool:
-        try:
-            return issubclass(annotation, pydantic.BaseModel)
-        except TypeError:
-            return False

@@ -181,14 +181,14 @@ accepting a _LambdaInput_ instance. _LambdaInput_ is just a dataclass with two a
 
 ```python
 import pyckish
-from pyckish import LambdaInputElement, LambdaInput
+from pyckish import LambdaInputElement
 from pyckish import ValidationError
 
 
 class MySpecialParameter(LambdaInputElement):
-    def extract(self, lambda_input: LambdaInput) -> str:
+    def extract(self, event: dict, context: dict) -> str:
         try:
-            return lambda_input.event['my_special_parameter_key']['another']
+            return event['my_special_parameter_key']['another']
         except KeyError:
             raise ValidationError('My special parameter is missing')
 
@@ -207,7 +207,6 @@ use the `add_exception_handler` method.
 
 ```python
 import pyckish
-from pyckish import LambdaInput
 
 
 class MyException(Exception):
@@ -215,19 +214,13 @@ class MyException(Exception):
 
 
 # This signature is required
-def handler_for_my_exception(lambda_input: LambdaInput, exception: Exception) -> str:
+def handler_for_my_exception(event: dict, context: dict, exception: Exception) -> str:
     # this return is going to be the lambda's return value
     return 'My exception occurred'
 
-
-pyckish_lambda = pyckish.Lambda()
-
-# Here you define what function is going to be executed when the exception you pass occurs
-pyckish_lambda.add_exception_handler(handler_for_my_exception, MyException)
-
-
-# realize you have to use the instance you instantiated above
-@pyckish_lambda
+@pyckish.Lambda(
+  exception_to_handler_mapping={MyException: handler_for_my_exception}
+)
 def lambda_handler() -> None:
     raise MyException()
 

@@ -2,8 +2,6 @@ import dataclasses
 import json
 from typing import Any, Optional
 
-import pydantic
-
 import pyckish.types.http_codes as status
 
 
