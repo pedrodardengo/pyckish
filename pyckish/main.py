@@ -24,6 +24,7 @@ class Lambda:
             self,
             is_http: bool = False,
             response_status_code: Optional[int] = None,
+            response_headers: Optional[dict[str, Any]] = None,
             response_model_exclude_unset: bool = False,
             response_model_exclude_defaults: bool = False,
             response_model_exclude_none: bool = False,
@@ -39,6 +40,7 @@ class Lambda:
         self.__exception_handler = ExceptionHandler(exception_to_handler_mapping)
         self.__response_handler = ResponseHandler(
             is_http=is_http,
+            headers=response_headers,
             status_code=response_status_code,
             exclude_unset=response_model_exclude_unset,
             exclude_defaults=response_model_exclude_defaults,
@@ -50,7 +52,7 @@ class Lambda:
 
     def __call__(self, lambda_handler_function: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(lambda_handler_function)
-        def wrapper(event: dict, context: dict) -> str:
+        def wrapper(event: dict, context: dict) -> Any:
             try:
                 intercepted_event, intercepted_context = \
                     self.__interceptor_handler.execute_chain_of_inbound_interceptors(event, context)

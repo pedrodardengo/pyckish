@@ -17,6 +17,7 @@ def test_prepare_response_with_http_response():
     http_response = HTTPResponse(body={'test': 'body'}, status_code=200)
     response_handler = ResponseHandler(
         is_http=True,
+        headers=None,
         status_code=None,
         exclude_unset=False,
         exclude_defaults=False,
@@ -44,6 +45,7 @@ def test_prepare_response_with_pydantic_model():
     model = AModel(id=1, name='test')
     response_handler = ResponseHandler(
         is_http=True,
+        headers={'my_header': 200},
         status_code=None,
         exclude_unset=False,
         exclude_defaults=False,
@@ -61,7 +63,7 @@ def test_prepare_response_with_pydantic_model():
     assert result == {
         "isBase64Encoded": False,
         "body": {"id": 1, "name": "test", "description": "test"},
-        "headers": {'Content-Type': 'application/json'},
+        "headers": {'Content-Type': 'application/json', 'my_header': 200},
         "statusCode": 201
     }
 
@@ -70,6 +72,7 @@ def test_prepare_response_with_dict_input():
     # Arrange
     response_handler = ResponseHandler(
         is_http=True,
+        headers={},
         status_code=None,
         exclude_unset=False,
         exclude_defaults=False,

@@ -9,8 +9,8 @@ import pyckish.types.http_codes as status
 
 @dataclasses.dataclass
 class HTTPResponse:
-    body: Any = None
-    headers: Optional[dict] = None
+    body: Any = dataclasses.field(default_factory=lambda: {})
+    headers: Optional[dict] = dataclasses.field(default_factory=lambda: {})
     status_code: Optional[int] = None
 
     def __call__(self, response_config: dict) -> dict:
