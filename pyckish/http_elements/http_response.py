@@ -19,12 +19,7 @@ class HTTPResponse:
             if isinstance(self.body, pydantic.BaseModel):
                 response_dict['body'] = self.body.json(**response_config)
             else:
-                try:
-                    response_dict['body'] = json.dumps(self.body)
-                except TypeError:
-                    raise TypeError(
-                        f'The object {self.body} is not JSON serializable, objects content: {self.body.__dict__}'
-                    )
+                response_dict['body'] = json.dumps(self.body)
         if self.headers:
             if 'Content-Type' not in self.headers.keys():
                 self.headers['Content-Type'] = 'application/json'

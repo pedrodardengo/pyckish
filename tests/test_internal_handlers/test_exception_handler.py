@@ -78,5 +78,3 @@ def test_deal_with_exception_parent_handler():
     result = exc_handler.deal_with_exception(event, context, custom_exception)
     # Assert
     assert result == "ValueError handled"
-
-

@@ -1,4 +1,6 @@
 """This is an example of event used for testing purposes"""
+import json
+
 EVENT_EXAMPLE = {
     'pathParameters': {
         'param_1': '200',
@@ -8,13 +10,13 @@ EVENT_EXAMPLE = {
         'header_1': ['1', '2', '3'],
         'header_2': {1, 2, 3}
     },
-    'body': {
+    'body': json.dumps({
         'body_1': {
             'body_1_1': '1.6',
             'body_1_2': '1996-12-01'
         },
-        'body_2': {'1', '2', '3'}
-    },
+        'body_2': ['1', '2', '3']
+    }),
     'queryStringParameters': {
         'q_1': '1996-12-01',
         'q_2': []

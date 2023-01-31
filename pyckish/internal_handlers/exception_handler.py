@@ -1,6 +1,5 @@
 from typing import Callable, Any, Optional, Type
 
-
 ExcHandler = Callable[[dict, dict, Exception], Any]
 
 
