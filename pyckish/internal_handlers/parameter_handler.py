@@ -35,7 +35,7 @@ class ParameterHandler:
         try:
             return FunctionParameters(**self.__raw_parameters)
         except pydantic.ValidationError as exc:
-            raise ValidationError(str(exc.errors()))
+            raise ValidationError('Validation Error', detail=exc.errors())
 
     @staticmethod
     def __get_annotation(parameter: inspect.Parameter) -> Type:

@@ -9,9 +9,7 @@ from pyckish.internal_handlers.response_handler import ResponseHandler, DictOrSe
 
 class Lambda:
     """
-    AWS Event extractor and validator.
-
-    To use it just place the decorator @pyckish.AWSEventExtractor() above your handler of your AWS Lambda function.
+    To use it just place the decorator @pyckish.Lambda() above your handler of your AWS Lambda function.
     Pyckish will extract, parse and validate pre-defined structures that resides in the event.
 
     For instance, when AWS API Gateway activates an AWS Lambda, data that were within an HTTP request will reside
