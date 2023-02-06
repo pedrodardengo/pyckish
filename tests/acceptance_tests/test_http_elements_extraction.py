@@ -45,8 +45,8 @@ def test_extraction_for_query_parameters() -> None:
     @pyckish.Lambda()
     def lambda_handler(
             query_1: datetime.date = QueryParameter(alias='q_1'),
-            query_2: list[dict] = QueryParameter(alias='q_2'),
-            query_3: dict = QueryParameter(alias='q_3', default={}),
+            query_2: list[dict] = QueryParameter(alias='q_2', regex='q_3'),
+            query_3: dict = QueryParameter(regex='q_3', default={}),
             q_params: UserQueryParameters = QueryParameters()
     ) -> None:
         assert isinstance(query_1, datetime.date)

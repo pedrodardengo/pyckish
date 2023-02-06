@@ -10,11 +10,11 @@ class PathParameter(LambdaInputElement):
     Extracts a single HTTP Path Parameter
     """
 
-    def __init__(self, alias: Optional[str] = None) -> None:
-        super().__init__(alias=alias)
+    def __init__(self, alias: Optional[str] = None, regex: Optional[str] = None) -> None:
+        super().__init__(alias=alias, regex=regex)
 
     def extract(self, event: dict, context: dict) -> Any:
-        key = self.alias if self.alias is not None else self.parameter_name
+        key = self.select_key_for_extraction(set(event.keys()))
         try:
             argument = event['pathParameters'][key]
         except (KeyError, AttributeError):

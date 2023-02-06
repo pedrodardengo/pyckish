@@ -9,7 +9,7 @@ def test_extraction_for_basic_parameters() -> None:
     def lambda_handler(
             some_value: int,
             value: str = EventElement(alias='some_value'),
-            c_value: float = ContextElement(alias='value_1'),
+            c_value: float = ContextElement(regex='value_1'),
             event: dict = Event(),
             context: dict = Context()
     ) -> None:

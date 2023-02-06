@@ -10,11 +10,16 @@ class QueryParameter(LambdaInputElement):
     Extracts a single HTTP Query String Parameter.
     """
 
-    def __init__(self, alias: Optional[str] = None, default: Any = EMPTY()) -> None:
-        super().__init__(alias=alias, default=default)
+    def __init__(
+            self,
+            alias: Optional[str] = None,
+            default: Any = EMPTY(),
+            regex: Optional[str] = None
+    ) -> None:
+        super().__init__(alias=alias, default=default, regex=regex)
 
     def extract(self, event: dict, context: dict) -> Any:
-        key = self.alias if self.alias is not None else self.parameter_name
+        key = self.select_key_for_extraction(set(event.keys()))
         try:
             return event['queryStringParameters'][key]
         except (KeyError, AttributeError):

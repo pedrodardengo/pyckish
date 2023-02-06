@@ -1,4 +1,4 @@
-import typing
+from typing import Optional, Any
 
 from pyckish import LambdaInputElement, EMPTY
 from pyckish.exceptions.validation_error import ValidationError
@@ -10,11 +10,16 @@ class ContextElement(LambdaInputElement):
     Extracts a single key from the aws Context
     """
 
-    def __init__(self, alias: typing.Optional[str] = None, default: typing.Any = EMPTY()) -> None:
-        super().__init__(alias=alias, default=default)
+    def __init__(
+            self,
+            alias: Optional[str] = None,
+            default: Any = EMPTY(),
+            regex: Optional[str] = None
+    ) -> None:
+        super().__init__(alias=alias, default=default, regex=regex)
 
-    def extract(self, event: dict, context: dict) -> typing.Any:
-        key = self.alias if self.alias is not None else self.parameter_name
+    def extract(self, event: dict, context: dict) -> Any:
+        key = self.select_key_for_extraction(set(context.keys()))
         try:
             return context[key]
         except (KeyError, AttributeError):
