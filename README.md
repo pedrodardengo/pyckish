@@ -59,6 +59,16 @@ def lambda_handler(
 
 And get validation and parsing free of trouble thanks to integration with Pydantic. Enjoy the advantages of a much
 more robust codebase, leaving behind having to extract and manage issues related to missing/wrong values.
+## Features
+
+Currently, Pyckish provides you with these features:
+
+- Extract/parse/validate the data contained in the Lambda Inputs all with adequate Exceptions raised in case of
+  failure.
+- Improves readability of your Lambda function by clearly stating the data your Lambda function requires.
+- Allow you to add exception handlers to your Lambda in an easy manner, allowing to gracefully deal with exceptions.
+- Response compatible with using Lambdas integrated with AWS API Gateway.
+- Allow you to add inbound and outbound middlewares.
 
 ## What are _AWS Lambda Functions_
 
@@ -80,7 +90,7 @@ context. This library extracts, validates and parses values from those parameter
 
 ## Motivation
 
-(Today, together with AWS API Gateway, it is possible to use only AWS Lambdas as back-end for your application.
+Today, together with AWS API Gateway, it is possible to use only AWS Lambdas as back-end for your application.
 The problem is, unlike modern Frameworks, like FastAPI and Starlite, using only AWS Lambdas requires you to develop
 your own solutions for extracting, parsing, validating as well as creating error handling for the inputs of your code.
 There are solutions that allow you to use ASGI Frameworks with AWS Lambdas, like Mangum. But it is yet another
@@ -97,14 +107,6 @@ capabilities than Chalice Framework, or it is going to remain as a simple "extra
 But I encourage you to try, simplicity and types will seduce you into it.
 
 ## Usage
-
-Currently, Pyckish provides you with these features:
-
-- Extract/parse/validate the data contained in the Lambda Inputs all with adequate Exceptions raised in case of
-  failure.
-- Improves readability of your Lambda function by clearly stating the data your Lambda function requires.
-- Allow you to add exception handlers to your Lambda in a easy manner, allowing to gracefully deal with exceptions.
-
 ### _Lambda_ Decorator
 
 In order to pyckish to work it is required to add an instance of the Lambda class as a decorator above your lambda
