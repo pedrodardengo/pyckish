@@ -162,7 +162,7 @@ a key to be extracted on the event.
 ```python
 import pyckish
 
-event, context = {'my_value_on_event': '200'}, {}
+event, context = {'my_param_on_event': '200'}, {}
 
 
 @pyckish.Lambda()
