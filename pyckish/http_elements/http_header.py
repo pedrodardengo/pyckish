@@ -19,9 +19,10 @@ class Header(LambdaInputElement):
         super().__init__(alias=alias, default=default, regex=regex)
 
     def extract(self, event: dict, context: dict) -> Any:
-        key = self.select_key_for_extraction(set(event.keys()))
         try:
-            return event['headers'][key]
+            headers = event['headers']
+            key = self.select_key_for_extraction(set(headers.keys()))
+            return headers[key]
         except (KeyError, AttributeError):
             if type(self.default) == EMPTY:
                 raise ValidationError(f'The header parameter "{key}" could not be found in the event')

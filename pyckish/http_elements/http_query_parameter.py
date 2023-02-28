@@ -19,9 +19,10 @@ class QueryParameter(LambdaInputElement):
         super().__init__(alias=alias, default=default, regex=regex)
 
     def extract(self, event: dict, context: dict) -> Any:
-        key = self.select_key_for_extraction(set(event.keys()))
         try:
-            return event['queryStringParameters'][key]
+            query_parameters = event['queryStringParameters']
+            key = self.select_key_for_extraction(set(query_parameters.keys()))
+            return query_parameters[key]
         except (KeyError, AttributeError):
             if type(self.default) == EMPTY:
                 raise ValidationError(f'The query string parameter "{key}" could not be found in the event')

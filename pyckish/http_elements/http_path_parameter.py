@@ -14,9 +14,10 @@ class PathParameter(LambdaInputElement):
         super().__init__(alias=alias, regex=regex)
 
     def extract(self, event: dict, context: dict) -> Any:
-        key = self.select_key_for_extraction(set(event.keys()))
         try:
-            argument = event['pathParameters'][key]
+            path_parameters = event['pathParameters']
+            key = self.select_key_for_extraction(set(path_parameters.keys()))
+            argument = path_parameters[key]
         except (KeyError, AttributeError):
             raise ValidationError(f'Path Parameter: "{key}" could not be found in event')
         return argument

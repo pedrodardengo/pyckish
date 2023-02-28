@@ -27,12 +27,12 @@ def test_extraction_for_path_parameters() -> None:
 def test_extraction_for_headers() -> None:
     @pyckish.Lambda()
     def lambda_handler(
-            header_1: list[int] = Header(),
+            header_4: list[int] = Header(regex='header_1'),
             header_2: set[str] = Header(),
             header_3: int = Header(default=300),
             headers: UserHeaders = Headers(),
     ) -> None:
-        assert header_1 == [1, 2, 3]
+        assert header_4 == [1, 2, 3]
         assert header_2 == {'1', '2', '3'}
         assert header_3 == 300
         assert isinstance(headers, pydantic.BaseModel)
