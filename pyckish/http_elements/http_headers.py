@@ -13,8 +13,4 @@ class Headers(LambdaInputElement):
         super().__init__()
 
     def extract(self, event: dict, context: dict) -> Any:
-        try:
-            argument = event['headers']
-        except KeyError:
-            argument = {}
-        return argument
+        return event.get('headers') or {}

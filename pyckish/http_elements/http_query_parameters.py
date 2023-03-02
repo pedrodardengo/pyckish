@@ -13,8 +13,4 @@ class QueryParameters(LambdaInputElement):
         super().__init__()
 
     def extract(self, event: dict, context: dict) -> Any:
-        try:
-            argument = event['queryStringParameters']
-        except KeyError:
-            argument = {}
-        return argument
+        return event.get('queryStringParameters') or {}
