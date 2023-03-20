@@ -1,5 +1,7 @@
 from typing import Optional, Any
 
+import pydantic
+
 from pyckish import LambdaInputElement, EMPTY
 from pyckish.exceptions.validation_error import ValidationError
 
@@ -20,6 +22,11 @@ class EventElement(LambdaInputElement):
 
     def extract(self, event: dict, context: dict) -> Any:
         key = self.select_key_for_extraction(set(event.keys()))
+        try:
+            if issubclass(self.annotation, pydantic.BaseModel) and type(self.default) == EMPTY:
+                self.default = {}
+        except Exception:
+            pass
         try:
             return event[key]
         except (KeyError, AttributeError):

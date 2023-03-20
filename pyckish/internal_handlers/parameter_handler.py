@@ -55,6 +55,7 @@ class ParameterHandler:
                 raise ValidationError(f'Parameter {parameter.name} is missing')
             return raw_argument
         lambda_input_element = parameter.default
+        lambda_input_element.annotation = ParameterHandler.__get_annotation(parameter)
         lambda_input_element.parameter_name = parameter.name
         raw_argument = lambda_input_element.extract(event, context)
         return raw_argument

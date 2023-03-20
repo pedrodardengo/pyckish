@@ -21,6 +21,7 @@ class LambdaInputElement(ABC):
         self.regex = regex
         self.default = default
         self.parameter_name: Optional[str] = None
+        self.annotation: Any = EMPTY()
 
     @abstractmethod
     def extract(self, event: dict, context: dict) -> Any:
